@@ -6,9 +6,16 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
+
 @Entity
 public class Book {
     @Id
+
+    public BigInteger ISBN;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Ejemplar> ejemplars;
+
+
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID book_id;
     private String ISBN;
@@ -31,6 +38,7 @@ public class Book {
             )
     )
     private List<Subcategory> subcategories;
+
     public Book(){
 
     }
@@ -102,5 +110,15 @@ public class Book {
 
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
+    }
+
+    public List<Ejemplar> getEjemplares() {
+        return ejemplars;
+    }
+    public void setEjemplares(List<Ejemplar> ejemplares) {
+        this.ejemplars = ejemplares;
+    }
+    public Ejemplar getEjemplar(int index){
+        return ejemplars.get(index);
     }
 }
