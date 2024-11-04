@@ -1,9 +1,9 @@
 package edu.eci.cvds.Books.Domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @Entity
 public class Book {
@@ -13,6 +13,9 @@ public class Book {
     public Integer year;
     @Id
     public BigInteger ISBN;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Ejemplar> ejemplars;
+
     public Book(){
 
     }
@@ -54,5 +57,15 @@ public class Book {
 
     public void setISBN(BigInteger ISBN) {
         this.ISBN = ISBN;
+    }
+
+    public List<Ejemplar> getEjemplares() {
+        return ejemplars;
+    }
+    public void setEjemplares(List<Ejemplar> ejemplares) {
+        this.ejemplars = ejemplares;
+    }
+    public Ejemplar getEjemplar(int index){
+        return ejemplars.get(index);
     }
 }
