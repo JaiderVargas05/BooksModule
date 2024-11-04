@@ -1,20 +1,20 @@
 package edu.eci.cvds.Books.Service;
 
 import edu.eci.cvds.Books.Domain.Book;
-import edu.eci.cvds.Books.Repository.BookRepository;
+import edu.eci.cvds.Books.Repository.BRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service("Imp")
 public class ImpBookService implements BookService{
-    private final BookRepository bookRepository;
+    private final BRepository bookRepository;
     @Autowired
-    public ImpBookService(@Qualifier("BMySql") BookRepository bookRepository){
+    public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository){
         this.bookRepository=bookRepository;
     }
     @Override
-    public void saveBook(Book book){
-        this.bookRepository.saveBook(book);
+    public void saveBook(Object book){
+        this.bookRepository.BSave(book);
     }
 }

@@ -4,21 +4,74 @@ import jakarta.persistence.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
+
 
 @Entity
 public class Book {
-    public String title;
-    public String author;
-    public String editorial;
-    public Integer year;
     @Id
+
     public BigInteger ISBN;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Ejemplar> ejemplars;
 
+
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID book_id;
+    private String ISBN;
+    private String description;
+    private String title;
+    private String author;
+    private String editorial;
+    private String edition;
+    private Integer year;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "book_subcategory_ map",
+            joinColumns = @JoinColumn(
+                    name = "book_id",
+                    referencedColumnName = "book_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "subcategory_id",
+                    referencedColumnName = "subcategory_id"
+            )
+    )
+    private List<Subcategory> subcategories;
+
     public Book(){
 
     }
+    public List<Subcategory> getSubcategories() {
+        return subcategories;
+    }
+    public UUID getBook_id() {
+        return book_id;
+    }
+
+    public void setBook_id(UUID book_id) {
+        this.book_id = book_id;
+    }
+
+    public void setSubcategories(List<Subcategory> subcategories) {
+        this.subcategories = subcategories;
+    }
+
+    public String getEdition() {
+        return edition;
+    }
+
+    public void setEdition(String edition) {
+        this.edition = edition;
+    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -51,11 +104,11 @@ public class Book {
         this.year = year;
     }
 
-    public BigInteger getISBN() {
+    public String getISBN() {
         return ISBN;
     }
 
-    public void setISBN(BigInteger ISBN) {
+    public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
 
