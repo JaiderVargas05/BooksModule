@@ -6,7 +6,6 @@ import java.util.Locale;
 
 @Entity
 public class Ejemplar {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

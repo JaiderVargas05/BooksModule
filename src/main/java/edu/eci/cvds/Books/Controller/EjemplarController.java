@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/EjemplarModule")
 public class EjemplarController {
@@ -32,4 +34,64 @@ public class EjemplarController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/DeleteEjemplar")
+    public ResponseEntity<?> deleteEjemplar(@RequestBody Ejemplar ejemplar){
+        try{
+            ejemplarService.deleteEjemplar(ejemplar);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (EjemplarException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getEjemplar")
+    public ResponseEntity<?> getEjemplar(@RequestParam String id){
+        try{
+            ejemplarService.getEjemplarById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (EjemplarException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/findAll")
+    public ResponseEntity<?> findEjemplars(){
+        try{
+            List<Ejemplar> ejemplars = ejemplarService.findAllEjemplars();
+            return new ResponseEntity<>(ejemplars, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @PutMapping ("/update")
+    public ResponseEntity<?> updateEjemplar(Ejemplar ejemplar){
+        try{
+            ejemplarService.updateEjemplar(ejemplar);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EjemplarException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/findByBarCode")
+    public ResponseEntity<?> findEjemplarByBarcode(Integer barcode){
+        try{
+            Ejemplar ejemplar = ejemplarService.findEjemplarByBarcode(barcode);
+            return new ResponseEntity<>(ejemplar, HttpStatus.OK);
+        } catch (EjemplarException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
