@@ -11,20 +11,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/CopyModule")
 public class CopyController {
     private final CopyService copyService;
     @Autowired
-    public CopyController(@Qualifier("ejemImp") CopyService copyService) {
+    public CopyController(@Qualifier("CopyImp") CopyService copyService) {
         this.copyService = copyService;
     }
     @CrossOrigin(origins = "*")
-    @PostMapping("/CreateCopy")
-    public ResponseEntity<?> createEjemplar(@RequestBody Copy copy){
+    @PostMapping("/createCopy")
+    public ResponseEntity<?> createCopy(@RequestParam UUID book_id, @RequestBody Copy copy){
         try{
-            copyService.createEjemplar(copy);
+            copyService.createCopy(book_id, copy);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -33,10 +34,10 @@ public class CopyController {
         }
     }
     @CrossOrigin(origins = "*")
-    @DeleteMapping("/DeleteEjemplar")
-    public ResponseEntity<?> deleteEjemplar(@RequestBody Copy copy){
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCopy(@RequestBody Copy copy){
         try{
-            copyService.deleteEjemplar(copy);
+            copyService.deleteCopy(copy);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -45,11 +46,11 @@ public class CopyController {
         }
     }
     @CrossOrigin(origins = "*")
-    @GetMapping("/getEjemplar")
-    public ResponseEntity<?> getEjemplar(@RequestParam String id){
+    @GetMapping("/getCopy")
+    public ResponseEntity<?> getCopy(@RequestParam String id){
         try{
-            copyService.getEjemplarById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Copy copy = copyService.getCopyById(id);
+            return new ResponseEntity<>(copy, HttpStatus.OK);
         }catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
@@ -58,9 +59,9 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @GetMapping("/findAll")
-    public ResponseEntity<?> findEjemplars(){
+    public ResponseEntity<?> findCopies(){
         try{
-            List<?> copies = copyService.findAllEjemplars();
+            List<?> copies = copyService.findAllCopies();
             return new ResponseEntity<>(copies, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -68,9 +69,9 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @PutMapping ("/update")
-    public ResponseEntity<?> updateEjemplar(Copy copy){
+    public ResponseEntity<?> updateCopy(Copy copy){
         try{
-            copyService.updateEjemplar(copy);
+            copyService.updateCopies(copy);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -81,9 +82,9 @@ public class CopyController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/findByBarCode")
-    public ResponseEntity<?> findEjemplarByBarcode(String barcode){
+    public ResponseEntity<?> findCopyByBarcode(String barcode){
         try{
-            Copy copy = copyService.findEjemplarByBarcode(barcode);
+            Copy copy = copyService.findCopyByBarcode(barcode);
             return new ResponseEntity<>(copy, HttpStatus.OK);
         } catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

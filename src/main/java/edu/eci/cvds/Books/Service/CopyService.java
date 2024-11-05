@@ -6,14 +6,15 @@ import edu.eci.cvds.Books.Exception.CopyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public interface CopyService {
-    boolean createEjemplar(Copy e) throws CopyException;
-    boolean deleteEjemplar(Copy e) throws CopyException;
-    Copy getEjemplarById(String id) throws CopyException;
-    List<?> findAllEjemplars();
-    boolean updateEjemplar(Copy e) throws CopyException;
-    List<Copy> findEjemplarsByBook(Book book) throws CopyException;
-    Copy findEjemplarByBarcode(String barcode) throws CopyException;
+    boolean createCopy(UUID book_id, Copy e) throws CopyException;
+    boolean deleteCopy(Copy e) throws CopyException;
+    Copy getCopyById(String id) throws CopyException;
+    List<?> findAllCopies();
+    boolean updateCopies(Copy e) throws CopyException;
+    List<Copy> findCopiesByBook(Book book) throws CopyException;
+    Copy findCopyByBarcode(String barcode) throws CopyException;
 }

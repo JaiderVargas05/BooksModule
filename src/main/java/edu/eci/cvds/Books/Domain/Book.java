@@ -39,6 +39,15 @@ public class Book {
     public Book(){
 
     }
+    public Book(String ISBN, String description, String title, String author, String editorial, String edition, Integer year) {
+        this.ISBN = ISBN;
+        this.description = description;
+        this.title = title;
+        this.author = author;
+        this.editorial = editorial;
+        this.edition = edition;
+        this.year = year;
+    }
     public List<Subcategory> getSubcategories() {
         return subcategories;
     }
