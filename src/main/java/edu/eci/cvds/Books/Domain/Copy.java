@@ -2,10 +2,8 @@ package edu.eci.cvds.Books.Domain;
 
 import jakarta.persistence.*;
 
-import java.util.Locale;
-
 @Entity
-public class Ejemplar {
+public class Copy {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -13,20 +11,20 @@ public class Ejemplar {
     @JoinColumn(name = "book_id")
     private Book book;
     @Enumerated(EnumType.STRING)
-    private EjemplarState state;
-    private Integer barCode;
+    private CopyState state;
+    private String barCode;
     @Enumerated(EnumType.STRING)
-    private EjemplarDispo disponibility;
+    private CopyDispo disponibility;
     private boolean active = true;
 
-    public Ejemplar(Book book, String state) {
-        this.disponibility = EjemplarDispo.AVAILABLE;
-        this.state = EjemplarState.valueOf(state.toUpperCase());
+    public Copy(Book book, String state) {
+        this.disponibility = CopyDispo.AVAILABLE;
+        this.state = CopyState.valueOf(state.toUpperCase());
         this.book = book;
         //generateCodeBar();
     }
-    public Ejemplar() {
-        this.disponibility = EjemplarDispo.AVAILABLE;
+    public Copy() {
+        this.disponibility = CopyDispo.AVAILABLE;
     }
     public String getId() {
         return id;
@@ -40,22 +38,22 @@ public class Ejemplar {
     public void setBook(Book book) {
         this.book = book;
     }
-    public EjemplarState getState() {
+    public CopyState getState() {
         return state;
     }
-    public void setState(EjemplarState state) {
+    public void setState(CopyState state) {
         this.state = state;
     }
-    public Integer getBarCode() {
+    public String getBarCode() {
         return barCode;
     }
-    public void setBarCode(Integer barCode) {
+    public void setBarCode(String barCode) {
         this.barCode = barCode;
     }
-    public EjemplarDispo getDisponibility() {
+    public CopyDispo getDisponibility() {
         return disponibility;
     }
-    public void setDisponibility(EjemplarDispo disponibility) {
+    public void setDisponibility(CopyDispo disponibility) {
         this.disponibility = disponibility;
     }
     public boolean isActive() {
@@ -64,5 +62,6 @@ public class Ejemplar {
     public void setActive(boolean active) {
         this.active = active;
     }
+
 
 }

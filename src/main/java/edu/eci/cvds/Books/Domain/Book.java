@@ -2,22 +2,19 @@ package edu.eci.cvds.Books.Domain;
 
 import jakarta.persistence.*;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
 
 @Entity
 public class Book {
+
     @Id
-
-    public BigInteger ISBN;
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<Ejemplar> ejemplars;
-
-
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID book_id;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Copy> copies;
+
     private String ISBN;
     private String description;
     private String title;
@@ -112,13 +109,13 @@ public class Book {
         this.ISBN = ISBN;
     }
 
-    public List<Ejemplar> getEjemplares() {
-        return ejemplars;
+    public List<Copy> getEjemplares() {
+        return copies;
     }
-    public void setEjemplares(List<Ejemplar> ejemplares) {
-        this.ejemplars = ejemplares;
+    public void setEjemplares(List<Copy> ejemplares) {
+        this.copies = ejemplares;
     }
-    public Ejemplar getEjemplar(int index){
-        return ejemplars.get(index);
+    public Copy getEjemplar(int index){
+        return copies.get(index);
     }
 }

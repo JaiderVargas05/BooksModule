@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface BookService {
-    public void saveBook(Object book);
+    void saveBook(Book book);
+
 }

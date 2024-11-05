@@ -1,6 +1,6 @@
 package edu.eci.cvds.Books.Domain;
 
-public enum EjemplarDispo {
+public enum CopyDispo {
     AVAILABLE,
     BORROWED
 }

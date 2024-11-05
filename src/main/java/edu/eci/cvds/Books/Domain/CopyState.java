@@ -1,6 +1,6 @@
 package edu.eci.cvds.Books.Domain;
 
-public enum EjemplarState {
+public enum CopyState {
     GOOD_CONDITION,
     FAIR,
     DAMAGED

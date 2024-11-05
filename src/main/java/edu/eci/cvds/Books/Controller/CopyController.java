@@ -1,34 +1,32 @@
 package edu.eci.cvds.Books.Controller;
 
 
-import edu.eci.cvds.Books.Domain.Book;
-import edu.eci.cvds.Books.Domain.Ejemplar;
-import edu.eci.cvds.Books.Exception.EjemplarException;
-import edu.eci.cvds.Books.Service.EjemplarService;
+import edu.eci.cvds.Books.Domain.Copy;
+import edu.eci.cvds.Books.Exception.CopyException;
+import edu.eci.cvds.Books.Service.CopyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/EjemplarModule")
-public class EjemplarController {
-    private final EjemplarService ejemplarService;
+@RequestMapping("/CopyModule")
+public class CopyController {
+    private final CopyService copyService;
     @Autowired
-    public EjemplarController(@Qualifier("ejemImp") EjemplarService ejemplarService) {
-        this.ejemplarService = ejemplarService;
+    public CopyController(@Qualifier("ejemImp") CopyService copyService) {
+        this.copyService = copyService;
     }
     @CrossOrigin(origins = "*")
-    @PostMapping("/CreateEjemplar")
-    public ResponseEntity<?> createEjemplar(@RequestBody Ejemplar ejemplar){
+    @PostMapping("/CreateCopy")
+    public ResponseEntity<?> createEjemplar(@RequestBody Copy copy){
         try{
-            ejemplarService.createEjemplar(ejemplar);
+            copyService.createEjemplar(copy);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (EjemplarException e){
+        }catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -36,11 +34,11 @@ public class EjemplarController {
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/DeleteEjemplar")
-    public ResponseEntity<?> deleteEjemplar(@RequestBody Ejemplar ejemplar){
+    public ResponseEntity<?> deleteEjemplar(@RequestBody Copy copy){
         try{
-            ejemplarService.deleteEjemplar(ejemplar);
+            copyService.deleteEjemplar(copy);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (EjemplarException e){
+        }catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,9 +48,9 @@ public class EjemplarController {
     @GetMapping("/getEjemplar")
     public ResponseEntity<?> getEjemplar(@RequestParam String id){
         try{
-            ejemplarService.getEjemplarById(id);
+            copyService.getEjemplarById(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (EjemplarException e){
+        }catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,19 +60,19 @@ public class EjemplarController {
     @GetMapping("/findAll")
     public ResponseEntity<?> findEjemplars(){
         try{
-            List<Ejemplar> ejemplars = ejemplarService.findAllEjemplars();
-            return new ResponseEntity<>(ejemplars, HttpStatus.OK);
+            List<?> copies = copyService.findAllEjemplars();
+            return new ResponseEntity<>(copies, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @CrossOrigin(origins = "*")
     @PutMapping ("/update")
-    public ResponseEntity<?> updateEjemplar(Ejemplar ejemplar){
+    public ResponseEntity<?> updateEjemplar(Copy copy){
         try{
-            ejemplarService.updateEjemplar(ejemplar);
+            copyService.updateEjemplar(copy);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (EjemplarException e){
+        } catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -83,11 +81,11 @@ public class EjemplarController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/findByBarCode")
-    public ResponseEntity<?> findEjemplarByBarcode(Integer barcode){
+    public ResponseEntity<?> findEjemplarByBarcode(String barcode){
         try{
-            Ejemplar ejemplar = ejemplarService.findEjemplarByBarcode(barcode);
-            return new ResponseEntity<>(ejemplar, HttpStatus.OK);
-        } catch (EjemplarException e){
+            Copy copy = copyService.findEjemplarByBarcode(barcode);
+            return new ResponseEntity<>(copy, HttpStatus.OK);
+        } catch (CopyException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
