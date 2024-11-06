@@ -1,5 +1,7 @@
 package edu.eci.cvds.Books.Service;
 
+import edu.eci.cvds.Books.Codes.CodeGenerator;
+import edu.eci.cvds.Books.Codes.GenerateCodeException;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Domain.CopyDispo;
@@ -14,10 +16,13 @@ import java.util.List;
 
 @Service("ejemImp")
 public class ImpCopyService implements CopyService {
+
     private final BRepository copyRepository;
+    private final CodeGenerator codeGenerator;
     @Autowired
-    public ImpCopyService(@Qualifier("EjRepSql") BRepository copyRepository) {
+    public ImpCopyService(@Qualifier("EjRepSql") BRepository copyRepository,CodeGenerator codeGenerator) {
         this.copyRepository = copyRepository;
+        this.codeGenerator=codeGenerator;
     }
 
     public boolean createEjemplar(Copy e) throws CopyException {
@@ -27,9 +32,17 @@ public class ImpCopyService implements CopyService {
             } if(e.getBook() == null || e.getState() == null){
                 throw new CopyException(CopyException.badEjemplar);
             }
+
+            // guardar ejemplar para que se genere el ID
             copyRepository.BSave(e);
+            // genera código de barras
+            String barcode = codeGenerator.generateCode(e.getId());
+            e.setBarCode(barcode);
+            // actualiza ejemplar con el código de barras
+            copyRepository.BSave(e);
+
             return true;
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException | GenerateCodeException ex){
             throw new CopyException(CopyException.badState);
         }
     }

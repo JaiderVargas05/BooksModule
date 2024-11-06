@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/BookModule")
 public class BookController {
@@ -23,5 +25,11 @@ public class BookController {
     public ResponseEntity<?> saveBook(@RequestBody Book book){
         bookService.saveBook(book);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/GetAllBooks")
+    public ResponseEntity<List<?>> getAllBooks() {
+        List<?> books = bookService.findAllBooks();
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 }
