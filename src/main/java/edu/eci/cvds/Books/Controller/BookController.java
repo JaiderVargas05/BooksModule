@@ -26,10 +26,5 @@ public class BookController {
         bookService.saveBook(book);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @GetMapping("/GetAllBooks")
-    public ResponseEntity<List<?>> getAllBooks() {
-        List<?> books = bookService.findAllBooks();
-        return new ResponseEntity<>(books, HttpStatus.OK);
-    }
+    
 }
