@@ -23,7 +23,7 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createCopy")
-    public ResponseEntity<?> createCopy(@RequestParam UUID book_id, @RequestBody Copy copy){
+    public ResponseEntity<?> createCopy(@RequestParam String book_id, @RequestBody Copy copy){
         try{
             copyService.createCopy(book_id, copy);
             return new ResponseEntity<>(HttpStatus.OK);

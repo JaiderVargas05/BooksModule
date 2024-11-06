@@ -22,7 +22,7 @@ public class ImpCopyService implements CopyService {
         this.copyRepository = copyRepository;
     }
 
-    public boolean createCopy(UUID book_id, Copy e) throws CopyException {
+    public boolean createCopy(String book_id, Copy e) throws CopyException {
         try{
             if (e == null){
                 throw new CopyException(CopyException.notNull);

@@ -19,6 +19,11 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     }
 
     @Override
+    default void BUpdate(Object book){
+        save((Book) book);
+    }
+
+    @Override
     default Object BFindById(String id) {
         return null;
     }

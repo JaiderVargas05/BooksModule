@@ -11,7 +11,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID book_id;
+    private String bookId;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Copy> copies;
 
@@ -27,11 +27,11 @@ public class Book {
             name = "book_subcategory_ map",
             joinColumns = @JoinColumn(
                     name = "book_id",
-                    referencedColumnName = "book_id"
+                    referencedColumnName = "bookId"
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "subcategory_id",
-                    referencedColumnName = "subcategory_id"
+                    referencedColumnName = "subcategoryId"
             )
     )
     private List<Subcategory> subcategories;
@@ -51,12 +51,12 @@ public class Book {
     public List<Subcategory> getSubcategories() {
         return subcategories;
     }
-    public UUID getBook_id() {
-        return book_id;
+    public String getId() {
+        return bookId;
     }
 
-    public void setBook_id(UUID book_id) {
-        this.book_id = book_id;
+    public void setId(String book_id) {
+        this.bookId = book_id;
     }
 
     public void setSubcategories(List<Subcategory> subcategories) {

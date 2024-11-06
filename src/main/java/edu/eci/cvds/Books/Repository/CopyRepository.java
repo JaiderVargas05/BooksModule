@@ -33,6 +33,6 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
     }
     List<Copy> findCopyByBook(Book book);
     @Query("SELECT b FROM Book b WHERE b.book_id = :book_id")
-    Book findBookById(@Param("book_id") UUID book_id);
+    Book findBookById(@Param("book_id") String book_id);
 
 }
