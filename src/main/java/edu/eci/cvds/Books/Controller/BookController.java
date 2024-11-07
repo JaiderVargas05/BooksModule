@@ -22,7 +22,7 @@ public class BookController {
         this.bookService=bookService;
     }
     @CrossOrigin(origins = "*")
-    @PostMapping("/SaveBook")
+    @PostMapping("/saveBook")
     public ResponseEntity<?> saveBook(@RequestBody Book book){
         try{
             bookService.saveBook(book);
@@ -34,7 +34,7 @@ public class BookController {
         }
     }
     @CrossOrigin(origins = "*")
-    @DeleteMapping("/delete")
+    @DeleteMapping("/deleteBook")
     public ResponseEntity<?> deleteCopy(@RequestParam String id){
         try{
             bookService.deleteBook(id);
@@ -46,7 +46,7 @@ public class BookController {
         }
     }
     @CrossOrigin(origins = "*")
-    @PatchMapping ("/update")
+    @PatchMapping ("/updateBook")
     public ResponseEntity<?> updateBook(@RequestBody Book book){
         try{
             bookService.updateBook(book);
