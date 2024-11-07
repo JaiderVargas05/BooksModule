@@ -21,7 +21,6 @@ public class Copy {
         this.disponibility = CopyDispo.AVAILABLE;
         this.state = CopyState.valueOf(state.toUpperCase());
         this.book = book;
-        //generateCodeBar();
     }
     public Copy() {
         this.disponibility = CopyDispo.AVAILABLE;

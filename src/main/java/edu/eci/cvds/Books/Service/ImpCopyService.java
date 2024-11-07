@@ -1,5 +1,7 @@
 package edu.eci.cvds.Books.Service;
 
+import edu.eci.cvds.Books.Codes.CodeGenerator;
+import edu.eci.cvds.Books.Codes.GenerateCodeException;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Domain.CopyDispo;
@@ -12,22 +14,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.UUID;
 
 @Service("CopyImp")
 public class ImpCopyService implements CopyService {
+
     private final BRepository copyRepository;
+    private final CodeGenerator codeGenerator;
     @Autowired
     public ImpCopyService(@Qualifier("CopyRep") BRepository copyRepository) {
         this.copyRepository = copyRepository;
+        this.codeGenerator=codeGenerator;
     }
 
     public boolean createCopy(String book_id, Copy e) throws CopyException {
         try{
             if (e == null){
                 throw new CopyException(CopyException.notNull);
-            }
-            if(e.getState() == null){
+            } if(e.getBook() == null || e.getState() == null){
                 throw new CopyException(CopyException.badEjemplar);
             }
             Book book = ((CopyRepository)copyRepository).findBookById(book_id);
@@ -36,7 +39,15 @@ public class ImpCopyService implements CopyService {
                 throw new CopyException(CopyException.badBook);
             }
             e.setBook(book);
+
+            // guardar ejemplar para que se genere el ID
             copyRepository.BSave(e);
+            // genera código de barras
+            String barcode = codeGenerator.generateCode(e.getId());
+            e.setBarCode(barcode);
+            // actualiza ejemplar con el código de barras
+            copyRepository.BSave(e);
+
             return true;
         } catch (IllegalArgumentException ex){
             throw new CopyException(CopyException.badState);
