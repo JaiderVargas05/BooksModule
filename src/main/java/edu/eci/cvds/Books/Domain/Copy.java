@@ -14,16 +14,14 @@ public class Copy {
     private CopyState state;
     private String barCode;
     @Enumerated(EnumType.STRING)
-    private CopyDispo disponibility;
+    private CopyDispo disponibility = CopyDispo.AVAILABLE;
     private boolean active = true;
 
     public Copy(Book book, String state) {
-        this.disponibility = CopyDispo.AVAILABLE;
         this.state = CopyState.valueOf(state.toUpperCase());
         this.book = book;
     }
     public Copy() {
-        this.disponibility = CopyDispo.AVAILABLE;
     }
     public String getId() {
         return id;
@@ -31,8 +29,8 @@ public class Copy {
     public void setId(String id) {
         this.id = id;
     }
-    public Book getBook() {
-        return book;
+    public String getBook() {
+        return this.book.getBookId();
     }
     public void setBook(Book book) {
         this.book = book;
@@ -62,5 +60,5 @@ public class Copy {
         this.active = active;
     }
 
-
+//data transfer object
 }

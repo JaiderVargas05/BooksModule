@@ -19,27 +19,27 @@ import java.util.List;
 public class ImpCopyService implements CopyService {
 
     private final BRepository copyRepository;
+    private final BRepository bookRepository;
     private final CodeGenerator codeGenerator;
     @Autowired
-    public ImpCopyService(@Qualifier("CopyRep") BRepository copyRepository) {
+    public ImpCopyService(@Qualifier("CopyRep") BRepository copyRepository,@Qualifier("BookRepo") BRepository bookRepository,CodeGenerator codeGenerator) {
         this.copyRepository = copyRepository;
+        this.bookRepository = bookRepository;
         this.codeGenerator=codeGenerator;
     }
-
-    public boolean createCopy(String book_id, Copy e) throws CopyException {
+    @Override
+    public boolean createCopy(String bookId, Copy e) throws CopyException {
         try{
             if (e == null){
                 throw new CopyException(CopyException.notNull);
-            } if(e.getBook() == null || e.getState() == null){
+            } if(e.getState() == null){
                 throw new CopyException(CopyException.badEjemplar);
             }
-            Book book = ((CopyRepository)copyRepository).findBookById(book_id);
-            System.out.println(book);
+            Book book = (Book) bookRepository.BFindById(bookId);
             if (book == null){
                 throw new CopyException(CopyException.badBook);
             }
             e.setBook(book);
-
             // guardar ejemplar para que se genere el ID
             copyRepository.BSave(e);
             // genera código de barras
@@ -51,7 +51,7 @@ public class ImpCopyService implements CopyService {
             return true;
         } catch (IllegalArgumentException ex){
             throw new CopyException(CopyException.badState);
-        } catch (TransientObjectException ex){
+        } catch (TransientObjectException | GenerateCodeException ex){
             throw new CopyException(CopyException.badBook);
         }
     }

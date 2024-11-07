@@ -12,6 +12,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String bookId;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    //@JoinColumn(name="book_id")
     private List<Copy> copies;
 
 
@@ -129,10 +130,10 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public List<Copy> getEjemplares() {
+    public List<Copy> getCopies() {
         return copies;
     }
-    public void setEjemplares(List<Copy> ejemplares) {
+    public void setCopies(List<Copy> ejemplares) {
         this.copies = ejemplares;
     }
     public Copy getEjemplar(int index){

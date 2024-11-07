@@ -10,11 +10,11 @@ import java.util.UUID;
 
 @Service
 public interface CopyService {
-    boolean createCopy(String book_id, Copy e) throws CopyException;
-    boolean deleteCopy(Copy e) throws CopyException;
+    boolean createCopy(String bookId, Copy copy) throws CopyException;
+    boolean deleteCopy(Copy copy) throws CopyException;
     Copy getCopyById(String id) throws CopyException;
     List<?> findAllCopies();
-    boolean updateCopies(Copy e) throws CopyException;
+    boolean updateCopies(Copy copy) throws CopyException;
     List<Copy> findCopiesByBook(Book book) throws CopyException;
     Copy findCopyByBarcode(String barcode) throws CopyException;
 }
