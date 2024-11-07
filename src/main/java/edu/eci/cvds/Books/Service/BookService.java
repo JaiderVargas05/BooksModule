@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 public interface BookService {
     void saveBook(Book book);
 
-    void deleteBook(String BookId);
+    boolean deleteBook(String BookId);
 
     boolean updateBook(Book book);
 
-    void getBook(String book);
+    Book getBook(String book);
 
     void getAllBooks(String BookId);
 

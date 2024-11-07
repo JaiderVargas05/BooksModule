@@ -9,7 +9,7 @@ import java.util.List;
 public interface BRepository {
     void BSave(Object object);
     Object BFindById(String id);
-    void BDelete(Object object);
+    void BDelete(String id);
     List<?> BFindAll();
     void BUpdate(Object object);
 }

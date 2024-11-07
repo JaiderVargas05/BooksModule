@@ -51,7 +51,7 @@ public class ImpCopyService implements CopyService {
         } if (copyRepository.BFindById(e.getId()) == null){
             throw new CopyException(CopyException.notFound);
         }
-        copyRepository.BDelete(e);
+        copyRepository.BDelete(e.getId());
         return true;
     }
 
@@ -91,7 +91,7 @@ public class ImpCopyService implements CopyService {
                     throw new CopyException(CopyException.badDispo);
                 }
             }
-            ((CopyRepository) copyRepository).updateCopy(e);
+             copyRepository.BUpdate(e);
             return true;
         } catch (IllegalArgumentException ex){
             throw new CopyException(CopyException.badValues);

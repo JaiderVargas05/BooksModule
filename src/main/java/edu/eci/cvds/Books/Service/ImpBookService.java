@@ -1,19 +1,12 @@
 package edu.eci.cvds.Books.Service;
 
 import edu.eci.cvds.Books.Domain.Book;
-import edu.eci.cvds.Books.Domain.Copy;
-import edu.eci.cvds.Books.Domain.CopyDispo;
-import edu.eci.cvds.Books.Domain.CopyState;
 import edu.eci.cvds.Books.Exception.BookException;
 import edu.eci.cvds.Books.Exception.CopyException;
 import edu.eci.cvds.Books.Repository.BRepository;
-import edu.eci.cvds.Books.Repository.BookRepository;
-import edu.eci.cvds.Books.Repository.CopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.Random;
 
 @Service("Imp")
 public class ImpBookService implements BookService{
@@ -26,15 +19,15 @@ public class ImpBookService implements BookService{
     @Override
     public boolean updateBook(Book book) {
         try {
-            Book oldBook = (Book)bookRepository.BFindById(book.getId());
+            Book oldBook = (Book)bookRepository.BFindById(book.getBookId());
             if (oldBook == null) {
                 throw new BookException(BookException.notFound);
             } else {
-                if ( book.getISBN() == null || book.getTitle()==null || book.getAuthor()==null) {
+                if ( book.getIsbn() == null || book.getTitle()==null || book.getAuthor()==null) {
                     throw new BookException(BookException.badBook);
                 }
             }
-            ((BookRepository) bookRepository).BUpdate(book);
+            (bookRepository).BUpdate(book);
             return true;
         } catch (IllegalArgumentException ex){
             throw new BookException(CopyException.badValues);
@@ -42,23 +35,41 @@ public class ImpBookService implements BookService{
     }
 
     @Override
-    public void deleteBook(String BookId) {
-
+    public boolean deleteBook(String BookId) {
+        if (BookId == null || BookId == "" ){
+            throw new BookException(BookException.notNull);
+        } if (bookRepository.BFindById(BookId) == null){
+            throw new BookException(BookException.notFound);
+        }
+        bookRepository.BDelete(BookId);
+        return true;
     }
 
     @Override
-    public void getBook(String book) {
-
+    public Book getBook(String id) {
+        if (id == null){
+            throw new BookException(BookException.dataNotNull);
+        }
+        Book book = (Book)bookRepository.BFindById(id);
+        if (book == null){
+            throw new BookException(BookException.notFound);
+        }
+        return book;
     }
 
     @Override
     public void getAllBooks(String BookId) {
-
+        this.bookRepository.BFindAll();
     }
 
     @Override
-    public void saveBook(Book book){
-
+    public void saveBook(Book book) throws BookException{
+        if (book == null){
+            throw new BookException(BookException.notNull);
+        }
+        if(book.getIsbn() == null){
+            throw new BookException(BookException.badBook);
+        }
         this.bookRepository.BSave(book);
     }
 

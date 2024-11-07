@@ -16,13 +16,16 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
     default void BSave(Object copy) {
         this.save((Copy)copy);
     }
-
-    default void updateCopy(Copy copy) {
-        this.save(copy);
-    }
-    default void BDelete(Object copy) {
-        ((Copy)copy).setActive(false);
+    @Override
+    default void BUpdate(Object copy) {
         this.save((Copy)copy);
+    }
+    default void BDelete(String id) {
+//        ((Copy)copy).setActive(false);
+//        this.save((Copy)copy);
+        Copy copy = findById(id).orElse(null);
+        copy.setActive(false);
+        this.BSave(copy);
     }
     default Copy BFindById(String id) {
         return this.findById(id).orElse(null);
@@ -32,7 +35,7 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
         return findAll();
     }
     List<Copy> findCopyByBook(Book book);
-    @Query("SELECT b FROM Book b WHERE b.book_id = :book_id")
-    Book findBookById(@Param("book_id") String book_id);
+    @Query("SELECT b FROM Book b WHERE b.bookId = :bookId")
+    Book findBookById(@Param("bookId") String bookId);
 
 }

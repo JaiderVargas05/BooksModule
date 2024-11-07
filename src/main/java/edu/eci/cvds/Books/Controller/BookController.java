@@ -1,6 +1,9 @@
 package edu.eci.cvds.Books.Controller;
 
 import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.Copy;
+import edu.eci.cvds.Books.Exception.BookException;
+import edu.eci.cvds.Books.Exception.CopyException;
 import edu.eci.cvds.Books.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +24,49 @@ public class BookController {
     @CrossOrigin(origins = "*")
     @PostMapping("/SaveBook")
     public ResponseEntity<?> saveBook(@RequestBody Book book){
-        bookService.saveBook(book);
-        return new ResponseEntity<>(book.getBook_id(), HttpStatus.OK);
+        try{
+            bookService.saveBook(book);
+            return new ResponseEntity<>(book.getBookId(),HttpStatus.OK);
+        }catch (BookException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCopy(@RequestParam String id){
+        try{
+            bookService.deleteBook(id);
+            return new ResponseEntity<>("Book deleted successfully",HttpStatus.OK);
+        }catch (BookException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @PatchMapping ("/update")
+    public ResponseEntity<?> updateBook(@RequestBody Book book){
+        try{
+            bookService.updateBook(book);
+            return new ResponseEntity<>("Book updated successfully",HttpStatus.OK);
+        } catch (BookException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getBook")
+    public ResponseEntity<?> getBook(@RequestParam String id){
+        try{
+            Book book = bookService.getBook(id);
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        }catch (BookException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository("BookRepo")
 public interface BookRepository extends BRepository,JpaRepository<Book,String>{
@@ -14,7 +15,10 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     }
 
     @Override
-    default void BDelete(Object object) {
+    default void BDelete(String id) {
+        Book book = findById(id).orElse(null);
+        book.setActive(false);
+        this.BSave(book);
 
     }
 
@@ -25,7 +29,7 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
 
     @Override
     default Object BFindById(String id) {
-        return null;
+        return findById(id).orElse(null);
     }
 
     @Override

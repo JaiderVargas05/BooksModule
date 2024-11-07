@@ -68,7 +68,7 @@ public class CopyController {
         }
     }
     @CrossOrigin(origins = "*")
-    @PutMapping ("/update")
+    @PatchMapping ("/update")
     public ResponseEntity<?> updateCopy(Copy copy){
         try{
             copyService.updateCopies(copy);

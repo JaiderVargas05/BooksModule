@@ -7,9 +7,9 @@ import java.util.UUID;
 public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID subcategory_id;
+    private String subcategoryId;
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "bookId")
     private Book book;
     private String description;
 

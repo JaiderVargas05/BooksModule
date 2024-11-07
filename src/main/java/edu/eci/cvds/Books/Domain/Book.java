@@ -3,7 +3,6 @@ package edu.eci.cvds.Books.Domain;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.UUID;
 
 
 @Entity
@@ -15,13 +14,32 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Copy> copies;
 
-    private String ISBN;
+
     private String description;
     private String title;
     private String author;
     private String editorial;
     private String edition;
+    private String isbn;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     private Integer year;
+    private boolean active = true;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "book_subcategory_ map",
@@ -39,8 +57,8 @@ public class Book {
     public Book(){
 
     }
-    public Book(String ISBN, String description, String title, String author, String editorial, String edition, Integer year) {
-        this.ISBN = ISBN;
+    public Book(String isbn, String description, String title, String author, String editorial, String edition, Integer year) {
+        this.isbn = isbn;
         this.description = description;
         this.title = title;
         this.author = author;
@@ -50,13 +68,6 @@ public class Book {
     }
     public List<Subcategory> getSubcategories() {
         return subcategories;
-    }
-    public String getId() {
-        return bookId;
-    }
-
-    public void setId(String book_id) {
-        this.bookId = book_id;
     }
 
     public void setSubcategories(List<Subcategory> subcategories) {
@@ -110,12 +121,12 @@ public class Book {
         this.year = year;
     }
 
-    public String getISBN() {
-        return ISBN;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public List<Copy> getEjemplares() {
