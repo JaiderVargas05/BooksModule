@@ -60,5 +60,4 @@ public class Copy {
         this.active = active;
     }
 
-//data transfer object
 }

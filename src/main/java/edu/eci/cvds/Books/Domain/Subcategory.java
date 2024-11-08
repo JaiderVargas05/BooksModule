@@ -11,9 +11,18 @@ public class Subcategory {
     @ManyToOne
     @JoinColumn(name = "bookId")
     private Book book;
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private Category category;
     private String description;
 
     public Subcategory(){
 
+    }
+    public String getDescription(){
+        return this.description;
+    }
+    public void setDescription(String description){
+        this.description=description;
     }
 }

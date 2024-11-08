@@ -7,6 +7,8 @@ import edu.eci.cvds.Books.Repository.BRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.*;
 
 @Service("Imp")
 public class ImpBookService implements BookService{
@@ -55,6 +57,19 @@ public class ImpBookService implements BookService{
             throw new BookException(BookException.notFound);
         }
         return book;
+    }
+    @Override
+    public String uploadImg(MultipartFile img){
+        try {
+            String directoryPath = "images/";
+            String fileName = img.getOriginalFilename();
+            Path filePath = Paths.get(directoryPath + fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, img.getBytes());
+            return filePath.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar la imagen.", e);
+        }
     }
 
     @Override
