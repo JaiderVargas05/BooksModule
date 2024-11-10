@@ -2,6 +2,7 @@ package edu.eci.cvds.Books.Service.Implementations;
 
 import edu.eci.cvds.Books.Codes.GenerateCodeException;
 import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.BookException;
 import edu.eci.cvds.Books.Exception.CopyException;
@@ -17,21 +18,26 @@ import java.util.List;
 @Service("ImpSub")
 public class ImpSubcategoryService implements SubcategoryService {
     private final BRepository subcategoryRepository;
+    private final BRepository categoryRepository;
     @Autowired
-    public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository){
+    public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository, @Qualifier("CatRepo") BRepository categoryRepository){
         this.subcategoryRepository=subcategoryRepository;
+        this.categoryRepository=subcategoryRepository;
     }
     @Override
-    public void createSubcategory(Subcategory subcategory) {
+    public void createSubcategory(String categoryId,Subcategory subcategory) {
 
         if (subcategory == null){
             throw new SubcategoryException(SubcategoryException.notNull);
         } if(subcategory.getDescription() == null || subcategory.getDescription().isEmpty() ){
             throw new SubcategoryException(SubcategoryException.badSubcategory);
         }
+        Category category = (Category) categoryRepository.BFindById(categoryId);
+        if (category == null){
+            throw new SubcategoryException(SubcategoryException.badCategory);
+        }
+        subcategory.setCategory(category);
         subcategoryRepository.BSave(subcategory);
-
-
     }
 
     @Override
@@ -69,7 +75,7 @@ public class ImpSubcategoryService implements SubcategoryService {
                 throw new SubcategoryException(SubcategoryException.notFound);
             } else {
                 if ( subcategory.getDescription() == null || subcategory.getDescription().isEmpty()) {
-                    throw new SubcategoryException(SubcategoryException.badBook);
+                    throw new SubcategoryException(SubcategoryException.badSubcategory);
                 }
             }
             (subcategoryRepository).BUpdate(subcategory);

@@ -25,9 +25,9 @@ public class SubcategoryController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createSubcategory")
-    public ResponseEntity<?> createSubcategory(@RequestBody Subcategory subcategory){
+    public ResponseEntity<?> createSubcategory(@RequestParam String categoryId,@RequestBody Subcategory subcategory){
         try{
-            subcategoryService.createSubcategory(subcategory);
+            subcategoryService.createSubcategory(categoryId,subcategory);
             return new ResponseEntity<>(subcategory.getSubcategoryId(), HttpStatus.OK);
         }catch (SubcategoryException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

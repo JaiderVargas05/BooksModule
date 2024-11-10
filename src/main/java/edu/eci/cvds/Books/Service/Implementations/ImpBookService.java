@@ -87,6 +87,20 @@ public class ImpBookService implements BookService {
             throw new BookException(BookException.badBook);
         }
         this.bookRepository.BSave(book);
+//        // Buscar y asignar la categoría
+//        Category category = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new BookException("Category not found"));
+//        book.setCategory(category);
+//
+//        // Buscar y asignar las subcategorías
+//        List<Subcategory> subcategories = subcategoryRepository.findAllById(subcategoryIds);
+//        if (subcategories.isEmpty()) {
+//            throw new BookException("Subcategories not found");
+//        }
+//        book.setSubcategories(subcategories);
+//
+//        // Guardar el libro en la base de datos
+//        bookRepository.save(book);
     }
 
 

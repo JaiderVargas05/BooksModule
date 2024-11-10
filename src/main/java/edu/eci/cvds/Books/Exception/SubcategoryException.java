@@ -8,7 +8,7 @@ public class SubcategoryException extends RuntimeException {
     public static final String badState = "The state of the Subcategory is not valid";
     public static final String badDispo = "The disponibility of the Subcategory is not valid";
     public static final String badSubcategory = "Cannot create Subcategory, incomplete data";
-    public static final String badBook = "Cannot find book";
+    public static final String badCategory = "Cannot find category";
     public static final String badValues = "The values of the Subcategory are not valid";
     //public static final String noSubcategorysForBook = "This book does not have any Subcategory";
 
