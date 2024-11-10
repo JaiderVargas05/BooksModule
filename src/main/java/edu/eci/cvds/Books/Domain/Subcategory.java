@@ -15,10 +15,28 @@ public class Subcategory {
     @JoinColumn(name = "categoryId")
     private Category category;
     private String description;
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public Subcategory(){
 
     }
+
+    public String getSubcategoryId() {
+        return subcategoryId;
+    }
+
+    public void setSubcategoryId(String subcategoryId) {
+        this.subcategoryId = subcategoryId;
+    }
+
     public String getDescription(){
         return this.description;
     }

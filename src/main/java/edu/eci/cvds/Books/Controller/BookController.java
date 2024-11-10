@@ -38,7 +38,7 @@ public class BookController {
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/deleteBook")
-    public ResponseEntity<?> deleteCopy(@RequestParam String id){
+    public ResponseEntity<?> deleteBook(@RequestParam String id){
         try{
             bookService.deleteBook(id);
             return new ResponseEntity<>("Book deleted successfully",HttpStatus.OK);

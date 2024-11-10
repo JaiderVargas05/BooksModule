@@ -1,17 +1,18 @@
-package edu.eci.cvds.Books.Service;
+package edu.eci.cvds.Books.Service.Implementations;
 
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Exception.BookException;
-import edu.eci.cvds.Books.Exception.CopyException;
 import edu.eci.cvds.Books.Repository.BRepository;
+import edu.eci.cvds.Books.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
+import java.util.List;
 
 @Service("Imp")
-public class ImpBookService implements BookService{
+public class ImpBookService implements BookService {
     private final BRepository bookRepository;
     @Autowired
     public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository){
@@ -32,7 +33,7 @@ public class ImpBookService implements BookService{
             (bookRepository).BUpdate(book);
             return true;
         } catch (IllegalArgumentException ex){
-            throw new BookException(CopyException.badValues);
+            throw new BookException(BookException.badValues);
         }
     }
 
@@ -73,8 +74,8 @@ public class ImpBookService implements BookService{
     }
 
     @Override
-    public void getAllBooks(String BookId) {
-        this.bookRepository.BFindAll();
+    public List<?> getAllBooks(String BookId) {
+        return this.bookRepository.BFindAll();
     }
 
     @Override

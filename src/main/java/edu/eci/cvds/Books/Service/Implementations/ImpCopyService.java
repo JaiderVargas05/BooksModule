@@ -1,4 +1,4 @@
-package edu.eci.cvds.Books.Service;
+package edu.eci.cvds.Books.Service.Implementations;
 
 import edu.eci.cvds.Books.Codes.CodeGenerator;
 import edu.eci.cvds.Books.Codes.GenerateCodeException;
@@ -9,6 +9,7 @@ import edu.eci.cvds.Books.Domain.CopyState;
 import edu.eci.cvds.Books.Exception.CopyException;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Repository.CopyRepository;
+import edu.eci.cvds.Books.Service.CopyService;
 import org.hibernate.TransientObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
