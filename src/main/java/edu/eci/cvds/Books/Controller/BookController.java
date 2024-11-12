@@ -89,7 +89,18 @@ public class BookController {
         catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getCopies")
+    public ResponseEntity<?> getTotalCopies(@RequestParam String bookId){
+        try{
+            List<Copy> copies = bookService.getCopies(bookId);
+            return new ResponseEntity<>(copies, HttpStatus.OK);
+        }catch (BookException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
 }

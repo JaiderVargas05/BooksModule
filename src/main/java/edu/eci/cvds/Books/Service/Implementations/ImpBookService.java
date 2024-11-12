@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
 import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Exception.BookException;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Service.BookService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
+import java.util.Collections;
 import java.util.List;
 
 @Service("Imp")
@@ -36,6 +38,7 @@ public class ImpBookService implements BookService {
             throw new BookException(BookException.badValues);
         }
     }
+
 
     @Override
     public boolean deleteBook(String BookId) {
@@ -101,6 +104,12 @@ public class ImpBookService implements BookService {
 //
 //        // Guardar el libro en la base de datos
 //        bookRepository.save(book);
+    }
+    @Override
+    public List<Copy> getCopies(String bookId){
+        Book book = this.getBook(bookId);
+        if(book!=null)return book.getCopies();
+        throw new BookException(BookException.notFound);
     }
 
 
