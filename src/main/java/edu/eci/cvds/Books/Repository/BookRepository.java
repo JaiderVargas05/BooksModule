@@ -34,4 +34,8 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     default List<Book> BFindAll(){
         return findAll();
     }
+    @Override
+    public default List<Object> BFindAllById(List<String> Ids){
+        return BFindAllById(Ids);
+    }
 }

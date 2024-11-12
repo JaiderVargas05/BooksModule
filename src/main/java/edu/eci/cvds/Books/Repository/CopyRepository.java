@@ -37,5 +37,9 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
     List<Copy> findCopyByBook(Book book);
     @Query("SELECT b FROM Book b WHERE b.bookId = :bookId")
     Book findBookById(@Param("bookId") String bookId);
+    @Override
+    public default List<Object> BFindAllById(List<String> Ids){
+        return BFindAllById(Ids);
+    }
 
 }
