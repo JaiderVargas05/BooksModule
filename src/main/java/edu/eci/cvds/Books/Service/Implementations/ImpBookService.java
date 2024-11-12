@@ -1,7 +1,9 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
 import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Copy;
+import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.BookException;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Service.BookService;
@@ -16,9 +18,13 @@ import java.util.List;
 @Service("Imp")
 public class ImpBookService implements BookService {
     private final BRepository bookRepository;
+    private final BRepository categoryRepository;
+    private final BRepository subcategoryRepository;
     @Autowired
-    public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository){
+    public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository,@Qualifier("CatRepo") BRepository subcategoryRepository,@Qualifier("SubRepo") BRepository categoryRepository){
         this.bookRepository=bookRepository;
+        this.categoryRepository=categoryRepository;
+        this.subcategoryRepository=subcategoryRepository;
     }
 
     @Override
@@ -82,7 +88,7 @@ public class ImpBookService implements BookService {
     }
 
     @Override
-    public void saveBook(Book book) throws BookException{
+    public void saveBook(Book book,String categoryId, List<String> subcategoryIds) throws BookException{
         if (book == null){
             throw new BookException(BookException.notNull);
         }
@@ -90,20 +96,14 @@ public class ImpBookService implements BookService {
             throw new BookException(BookException.badBook);
         }
         this.bookRepository.BSave(book);
-//        // Buscar y asignar la categoría
-//        Category category = categoryRepository.findById(categoryId)
-//                .orElseThrow(() -> new BookException("Category not found"));
-//        book.setCategory(category);
-//
-//        // Buscar y asignar las subcategorías
-//        List<Subcategory> subcategories = subcategoryRepository.findAllById(subcategoryIds);
-//        if (subcategories.isEmpty()) {
-//            throw new BookException("Subcategories not found");
-//        }
-//        book.setSubcategories(subcategories);
-//
-//        // Guardar el libro en la base de datos
-//        bookRepository.save(book);
+        Category category = (Category) categoryRepository.BFindById(categoryId);
+        book.setCategory(category);
+        List<Subcategory> subcategories = (List<Subcategory>) (List<?>) subcategoryRepository.BFindAllById(subcategoryIds);
+        if (subcategories.isEmpty()) {
+            throw new BookException("Subcategories not found");
+        }
+        book.setSubcategories(subcategories);
+        bookRepository.BSave(book);
     }
     @Override
     public List<Copy> getCopies(String bookId){

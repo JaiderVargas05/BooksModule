@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Controller;
 
 import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.BookRequest;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Exception.BookException;
 import edu.eci.cvds.Books.Exception.CopyException;
@@ -26,16 +27,16 @@ public class BookController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/saveBook")
-    public ResponseEntity<?> saveBook(@RequestBody Book book){
+    public ResponseEntity<?> saveBook(@RequestBody BookRequest bookRequest){
         try{
 //            // Crear el libro a partir del BookRequest
-//            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
-//                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),
-//                    bookRequest.getYear());
+            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
+                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),
+                    bookRequest.getYear());
 //
 //            // Guardar el libro con su categoría y subcategorías
-//            bookService.saveBook(book, bookRequest.getCategoryId(), bookRequest.getSubcategoryIds());
-            bookService.saveBook(book);
+            bookService.saveBook(book, bookRequest.getCategoryId(), bookRequest.getSubcategoryIds());
+            //bookService.saveBook(book);
             return new ResponseEntity<>(book.getBookId(),HttpStatus.OK);
         }catch (BookException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

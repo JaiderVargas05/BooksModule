@@ -35,4 +35,9 @@ public interface SubcategoryRepository extends BRepository,JpaRepository<Subcate
     public default void BUpdate(Object subcategory){
         save((Subcategory) subcategory);
     }
+
+    @Override
+    public default List<Object> BFindAllById(List<String> Ids){
+        return BFindAllById(Ids);
+    }
 }
