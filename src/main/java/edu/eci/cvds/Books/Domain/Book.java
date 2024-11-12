@@ -12,35 +12,20 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String bookId;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    //@JoinColumn(name="book_id")
     private List<Copy> copies;
-
-
     private String description;
     private String title;
     private String author;
     private String editorial;
     private String edition;
     private String isbn;
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public String getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    private String imgPath;
 
     private Integer year;
     private boolean active = true;
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
+    private Category category;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "book_subcategory_ map",
@@ -67,6 +52,23 @@ public class Book {
         this.edition = edition;
         this.year = year;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public List<Subcategory> getSubcategories() {
         return subcategories;
     }
@@ -138,5 +140,20 @@ public class Book {
     }
     public Copy getEjemplar(int index){
         return copies.get(index);
+    }
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

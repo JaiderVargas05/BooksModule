@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,6 +28,13 @@ public class BookController {
     @PostMapping("/saveBook")
     public ResponseEntity<?> saveBook(@RequestBody Book book){
         try{
+//            // Crear el libro a partir del BookRequest
+//            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
+//                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),
+//                    bookRequest.getYear());
+//
+//            // Guardar el libro con su categoría y subcategorías
+//            bookService.saveBook(book, bookRequest.getCategoryId(), bookRequest.getSubcategoryIds());
             bookService.saveBook(book);
             return new ResponseEntity<>(book.getBookId(),HttpStatus.OK);
         }catch (BookException e){
@@ -37,7 +45,7 @@ public class BookController {
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/deleteBook")
-    public ResponseEntity<?> deleteCopy(@RequestParam String id){
+    public ResponseEntity<?> deleteBook(@RequestParam String id){
         try{
             bookService.deleteBook(id);
             return new ResponseEntity<>("Book deleted successfully",HttpStatus.OK);
@@ -70,6 +78,18 @@ public class BookController {
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @CrossOrigin(origins = "*")
+    @PostMapping("/uploadImg")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile img) {
+        try{
+            String path = this.bookService.uploadImg(img);
+            return new ResponseEntity<>(path, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
     
 }

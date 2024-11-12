@@ -1,15 +1,18 @@
-package edu.eci.cvds.Books.Service;
+package edu.eci.cvds.Books.Service.Implementations;
 
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Exception.BookException;
-import edu.eci.cvds.Books.Exception.CopyException;
 import edu.eci.cvds.Books.Repository.BRepository;
+import edu.eci.cvds.Books.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.*;
+import java.util.List;
 
 @Service("Imp")
-public class ImpBookService implements BookService{
+public class ImpBookService implements BookService {
     private final BRepository bookRepository;
     @Autowired
     public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository){
@@ -30,7 +33,7 @@ public class ImpBookService implements BookService{
             (bookRepository).BUpdate(book);
             return true;
         } catch (IllegalArgumentException ex){
-            throw new BookException(CopyException.badValues);
+            throw new BookException(BookException.badValues);
         }
     }
 
@@ -56,10 +59,23 @@ public class ImpBookService implements BookService{
         }
         return book;
     }
+    @Override
+    public String uploadImg(MultipartFile img){
+        try {
+            String directoryPath = "images/";
+            String fileName = img.getOriginalFilename();
+            Path filePath = Paths.get(directoryPath + fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, img.getBytes());
+            return filePath.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar la imagen.", e);
+        }
+    }
 
     @Override
-    public void getAllBooks(String BookId) {
-        this.bookRepository.BFindAll();
+    public List<?> getAllBooks(String BookId) {
+        return this.bookRepository.BFindAll();
     }
 
     @Override
@@ -71,6 +87,20 @@ public class ImpBookService implements BookService{
             throw new BookException(BookException.badBook);
         }
         this.bookRepository.BSave(book);
+//        // Buscar y asignar la categoría
+//        Category category = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new BookException("Category not found"));
+//        book.setCategory(category);
+//
+//        // Buscar y asignar las subcategorías
+//        List<Subcategory> subcategories = subcategoryRepository.findAllById(subcategoryIds);
+//        if (subcategories.isEmpty()) {
+//            throw new BookException("Subcategories not found");
+//        }
+//        book.setSubcategories(subcategories);
+//
+//        // Guardar el libro en la base de datos
+//        bookRepository.save(book);
     }
 
 
