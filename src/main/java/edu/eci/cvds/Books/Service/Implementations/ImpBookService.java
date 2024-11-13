@@ -4,7 +4,7 @@ import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Domain.Subcategory;
-import edu.eci.cvds.Books.Exception.BookException;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +32,15 @@ public class ImpBookService implements BookService {
         try {
             Book oldBook = (Book)bookRepository.BFindById(book.getBookId());
             if (oldBook == null) {
-                throw new BookException(BookException.notFound);
-            } else {
-                if ( book.getIsbn() == null || book.getTitle()==null || book.getAuthor()==null) {
-                    throw new BookException(BookException.badBook);
-                }
+                throw new NotFoundException("Book", book.getBookId());
+            }
+            if (book.getIsbn() == null || book.getTitle() == null || book.getAuthor() == null) {
+                throw new NotNullException("Book", "Required fields are missing");
             }
             (bookRepository).BUpdate(book);
             return true;
         } catch (IllegalArgumentException ex){
-            throw new BookException(BookException.badValues);
+            throw new BadValuesException("Invalid values for Book with ID " + book.getBookId());
         }
     }
 
@@ -49,9 +48,9 @@ public class ImpBookService implements BookService {
     @Override
     public boolean deleteBook(String BookId) {
         if (BookId == null || BookId == "" ){
-            throw new BookException(BookException.notNull);
+            throw new NotNullException("Book ID", "null");
         } if (bookRepository.BFindById(BookId) == null){
-            throw new BookException(BookException.notFound);
+            throw new NotFoundException("Book",BookId);
         }
         bookRepository.BDelete(BookId);
         return true;
@@ -60,11 +59,11 @@ public class ImpBookService implements BookService {
     @Override
     public Book getBook(String id) {
         if (id == null){
-            throw new BookException(BookException.dataNotNull);
+            throw new NotNullException("Book ID","null");
         }
         Book book = (Book)bookRepository.BFindById(id);
         if (book == null){
-            throw new BookException(BookException.notFound);
+            throw new NotFoundException("Book", id);
         }
         return book;
     }
@@ -78,7 +77,7 @@ public class ImpBookService implements BookService {
             Files.write(filePath, img.getBytes());
             return filePath.toString();
         } catch (Exception e) {
-            throw new RuntimeException("Error al guardar la imagen.", e);
+            throw new RuntimeException("Error saving the image.", e);
         }
     }
 
@@ -88,19 +87,19 @@ public class ImpBookService implements BookService {
     }
 
     @Override
-    public void saveBook(Book book,String categoryId, List<String> subcategoryIds) throws BookException{
+    public void saveBook(Book book,String categoryId, List<String> subcategoryIds) {
         if (book == null){
-            throw new BookException(BookException.notNull);
+            throw new NotNullException("Book","null");
         }
         if(book.getIsbn() == null){
-            throw new BookException(BookException.badBook);
+            throw new BadObjectException("Book", book.getIsbn());
         }
         this.bookRepository.BSave(book);
         Category category = (Category) categoryRepository.BFindById(categoryId);
         book.setCategory(category);
         List<Subcategory> subcategories = (List<Subcategory>) (List<?>) subcategoryRepository.BFindAllById(subcategoryIds);
         if (subcategories.isEmpty()) {
-            throw new BookException("Subcategories not found");
+            throw new NotFoundException("Subcategories", "none found for provided IDs");
         }
         book.setSubcategories(subcategories);
         bookRepository.BSave(book);
@@ -109,8 +108,6 @@ public class ImpBookService implements BookService {
     public List<Copy> getCopies(String bookId){
         Book book = this.getBook(bookId);
         if(book!=null)return book.getCopies();
-        throw new BookException(BookException.notFound);
+        throw new NotFoundException("Book", bookId);
     }
-
-
 }

@@ -1,11 +1,9 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
-import edu.eci.cvds.Books.Domain.Book;
+
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
-import edu.eci.cvds.Books.Exception.BookException;
-import edu.eci.cvds.Books.Exception.CategoryException;
-import edu.eci.cvds.Books.Exception.CopyException;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +21,10 @@ public class ImpCategoryService implements CategoryService {
     @Override
     public void createCategory(Category category) {
         if (category == null){
-            throw new CategoryException(CategoryException.notNull);
+            throw new NotNullException("Category", "null");
         }
         if(category.getDescription() == null){
-            throw new CategoryException(CategoryException.badCategory);
+            throw new BadObjectException("Category", "null description");
         }
         this.categoryRepository.BSave(category);
     }
@@ -34,9 +32,9 @@ public class ImpCategoryService implements CategoryService {
     @Override
     public void deleteCategory(String categoryId) {
         if (categoryId == null || categoryId == "" ){
-            throw new CategoryException(CategoryException.notNull);
+            throw new NotNullException("Category ID", "null");
         } if (categoryRepository.BFindById(categoryId) == null){
-            throw new CategoryException(CategoryException.notFound);
+            throw new NotFoundException("Category", categoryId);
         }
         categoryRepository.BDelete(categoryId);
     }
@@ -44,11 +42,11 @@ public class ImpCategoryService implements CategoryService {
     @Override
     public Category getCategory(String categoryId) {
         if (categoryId == null){
-            throw new CategoryException(CategoryException.dataNotNull);
+            throw new NotNullException("Catgory ID", "null");
         }
         Category category = (Category)categoryRepository.BFindById(categoryId);
         if (category == null){
-            throw new CategoryException(CategoryException.notFound);
+            throw new NotFoundException("Category", categoryId);
         }
         return category;
     }
@@ -69,15 +67,15 @@ public class ImpCategoryService implements CategoryService {
         try {
             Category oldCategory = (Category)categoryRepository.BFindById(category.getCategoryId());
             if (oldCategory == null) {
-                throw new CategoryException(CategoryException.notFound);
+                throw new NotFoundException("Category", category.getCategoryId());
             } else {
                 if ( category.getDescription() == null || category.getDescription().isEmpty()) {
-                    throw new CategoryException(CategoryException.badCategory);
+                    throw new BadObjectException("Category", category.getDescription());
                 }
             }
             (categoryRepository).BUpdate(category);
         } catch (IllegalArgumentException ex){
-            throw new CategoryException(CategoryException.badValues);
+            throw new BadValuesException("Invalid values for Category with ID", category.getCategoryId());
         }
     }
 }

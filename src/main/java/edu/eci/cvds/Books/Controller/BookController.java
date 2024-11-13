@@ -3,15 +3,12 @@ package edu.eci.cvds.Books.Controller;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.BookRequest;
 import edu.eci.cvds.Books.Domain.Copy;
-import edu.eci.cvds.Books.Exception.BookException;
-import edu.eci.cvds.Books.Exception.CopyException;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,9 +36,9 @@ public class BookController {
             bookService.saveBook(book, bookRequest.getCategoryId(), bookRequest.getSubcategoryIds());
             //bookService.saveBook(book);
             return new ResponseEntity<>(book.getBookId(),HttpStatus.OK);
-        }catch (BookException e){
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -51,9 +48,11 @@ public class BookController {
         try{
             bookService.deleteBook(id);
             return new ResponseEntity<>("Book deleted successfully",HttpStatus.OK);
-        }catch (BookException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -63,9 +62,11 @@ public class BookController {
         try{
             bookService.updateBook(book);
             return new ResponseEntity<>("Book updated successfully",HttpStatus.OK);
-        } catch (BookException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,9 +76,11 @@ public class BookController {
         try{
             Book book = bookService.getBook(id);
             return new ResponseEntity<>(book, HttpStatus.OK);
-        }catch (BookException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -88,7 +91,7 @@ public class BookController {
             String path = this.bookService.uploadImg(img);
             return new ResponseEntity<>(path, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -98,11 +101,13 @@ public class BookController {
         try{
             List<Copy> copies = bookService.getCopies(bookId);
             return new ResponseEntity<>(copies, HttpStatus.OK);
-        }catch (BookException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
 }

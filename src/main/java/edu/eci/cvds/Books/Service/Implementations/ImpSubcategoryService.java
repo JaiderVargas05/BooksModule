@@ -1,15 +1,11 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
-import edu.eci.cvds.Books.Codes.GenerateCodeException;
-import edu.eci.cvds.Books.Domain.Book;
+
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
-import edu.eci.cvds.Books.Exception.BookException;
-import edu.eci.cvds.Books.Exception.CopyException;
-import edu.eci.cvds.Books.Exception.SubcategoryException;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Service.SubcategoryService;
-import org.hibernate.TransientObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -28,13 +24,13 @@ public class ImpSubcategoryService implements SubcategoryService {
     public void createSubcategory(String categoryId,Subcategory subcategory) {
 
         if (subcategory == null){
-            throw new SubcategoryException(SubcategoryException.notNull);
+            throw new NotNullException("Subcategory", "null");
         } if(subcategory.getDescription() == null || subcategory.getDescription().isEmpty() ){
-            throw new SubcategoryException(SubcategoryException.badSubcategory);
+            throw new BadObjectException("Subcategory", "null or empty description");
         }
         Category category = (Category) categoryRepository.BFindById(categoryId);
         if (category == null){
-            throw new SubcategoryException(SubcategoryException.badCategory);
+            throw new NotFoundException("Category", categoryId);
         }
         subcategory.setCategory(category);
         subcategoryRepository.BSave(subcategory);
@@ -43,9 +39,9 @@ public class ImpSubcategoryService implements SubcategoryService {
     @Override
     public void deleteSubcategory(String subcategoryId) {
         if (subcategoryId == null || subcategoryId.isEmpty() ){
-            throw new SubcategoryException(SubcategoryException.notNull);
+            throw new NotNullException("Subcategory","null or empty");
         } if (subcategoryRepository.BFindById(subcategoryId) == null){
-            throw new SubcategoryException(SubcategoryException.notFound);
+            throw new NotFoundException("Subcategory", subcategoryId);
         }
         subcategoryRepository.BDelete(subcategoryId);
     }
@@ -53,11 +49,11 @@ public class ImpSubcategoryService implements SubcategoryService {
     @Override
     public Subcategory getSubcategory(String subcategoryId) {
         if (subcategoryId == null){
-            throw new SubcategoryException(SubcategoryException.dataNotNull);
+            throw new NotNullException("Subcategory ID", "null");
         }
         Subcategory subcategory = (Subcategory) subcategoryRepository.BFindById(subcategoryId);
         if (subcategory == null){
-            throw new SubcategoryException(SubcategoryException.notFound);
+            throw new NotFoundException("Subcategory", subcategoryId);
         }
         return subcategory;
     }
@@ -72,15 +68,15 @@ public class ImpSubcategoryService implements SubcategoryService {
         try {
             Subcategory oldSubcategory = (Subcategory) subcategoryRepository.BFindById(subcategory.getSubcategoryId());
             if (oldSubcategory == null) {
-                throw new SubcategoryException(SubcategoryException.notFound);
+                throw new NotFoundException("Subcategory", subcategory.getSubcategoryId());
             } else {
                 if ( subcategory.getDescription() == null || subcategory.getDescription().isEmpty()) {
-                    throw new SubcategoryException(SubcategoryException.badSubcategory);
+                    throw new BadObjectException("Subcategory", subcategory.getDescription());
                 }
             }
             (subcategoryRepository).BUpdate(subcategory);
         } catch (IllegalArgumentException ex){
-            throw new SubcategoryException(SubcategoryException.badValues);
+            throw new BadValuesException("Invalid values for Subcategory with ID",subcategory.getSubcategoryId());
         }
     }
 }
