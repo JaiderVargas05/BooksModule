@@ -12,5 +12,5 @@ public interface BRepository {
     void BDelete(String id);
     List<?> BFindAll();
     void BUpdate(Object object);
-    List<Object> BFindAllById(List<String> Ids);
+    List<?> BFindAllById(List<String> Ids);
 }

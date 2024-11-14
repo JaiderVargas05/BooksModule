@@ -35,7 +35,7 @@ public interface CategoryRepository extends BRepository, JpaRepository<Category,
         save((Category) category);
     }
     @Override
-    public default List<Object> BFindAllById(List<String> Ids){
-        return BFindAllById(Ids);
+    public default List<?> BFindAllById(List<String> Ids){
+        return findAllById(Ids);
     }
 }

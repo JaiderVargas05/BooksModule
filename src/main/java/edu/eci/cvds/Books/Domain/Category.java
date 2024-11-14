@@ -46,8 +46,10 @@ public class Category {
                 .map(Book::getTitle)
                 .collect(Collectors.toList());
     }
-    public List<Subcategory> getSubcategories(){
-        return subcategories;
+    public List<String> getSubcategories(){
+        return subcategories.stream()
+                .map(Subcategory::getDescription)
+                .collect(Collectors.toList());
     }
 
 }

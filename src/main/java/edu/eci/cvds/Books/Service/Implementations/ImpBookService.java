@@ -21,7 +21,7 @@ public class ImpBookService implements BookService {
     private final BRepository categoryRepository;
     private final BRepository subcategoryRepository;
     @Autowired
-    public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository,@Qualifier("CatRepo") BRepository subcategoryRepository,@Qualifier("SubRepo") BRepository categoryRepository){
+    public ImpBookService(@Qualifier("BookRepo") BRepository bookRepository,@Qualifier("CatRepo") BRepository categoryRepository,@Qualifier("SubRepo") BRepository subcategoryRepository){
         this.bookRepository=bookRepository;
         this.categoryRepository=categoryRepository;
         this.subcategoryRepository=subcategoryRepository;
@@ -95,10 +95,11 @@ public class ImpBookService implements BookService {
         if(book.getIsbn() == null){
             throw new BookException(BookException.badBook);
         }
-        this.bookRepository.BSave(book);
+        //this.bookRepository.BSave(book);
         Category category = (Category) categoryRepository.BFindById(categoryId);
         book.setCategory(category);
-        List<Subcategory> subcategories = (List<Subcategory>) (List<?>) subcategoryRepository.BFindAllById(subcategoryIds);
+        List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(subcategoryIds);
+        //List<Subcategory> subcategories = (List<Subcategory>) (List<?>) subcategoryRepository.BFindAllById(subcategoryIds);
         if (subcategories.isEmpty()) {
             throw new BookException("Subcategories not found");
         }
