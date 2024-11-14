@@ -37,7 +37,7 @@ public interface SubcategoryRepository extends BRepository,JpaRepository<Subcate
     }
 
     @Override
-    public default List<Object> BFindAllById(List<String> Ids){
-        return BFindAllById(Ids);
+    public default List<?> BFindAllById(List<String> Ids){
+        return findAllById(Ids);
     }
 }

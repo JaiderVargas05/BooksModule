@@ -1,4 +1,4 @@
-package edu.eci.cvds.Books.Domain;
+package edu.eci.cvds.Books.Controller.RequestModel;
 
 import java.util.List;
 

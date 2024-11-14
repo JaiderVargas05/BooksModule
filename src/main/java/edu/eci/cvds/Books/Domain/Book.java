@@ -3,6 +3,7 @@ package edu.eci.cvds.Books.Domain;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -69,8 +70,10 @@ public class Book {
         this.active = active;
     }
 
-    public List<Subcategory> getSubcategories() {
-        return subcategories;
+    public List<String> getSubcategories() {
+        return subcategories.stream()
+                .map(Subcategory::getDescription)
+                .collect(Collectors.toList());
     }
 
     public void setSubcategories(List<Subcategory> subcategories) {
@@ -149,8 +152,8 @@ public class Book {
         this.imgPath = imgPath;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getCategory() {
+        return category.getDescription();
     }
 
     public void setCategory(Category category) {

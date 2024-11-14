@@ -59,7 +59,7 @@ public class ImpCategoryService implements CategoryService {
     }
 
     @Override
-    public List<Subcategory> getSubcategories(String categoryId) {
+    public List<String> getSubcategories(String categoryId) {
         Category category = this.getCategory(categoryId);
         return category.getSubcategories();
     }

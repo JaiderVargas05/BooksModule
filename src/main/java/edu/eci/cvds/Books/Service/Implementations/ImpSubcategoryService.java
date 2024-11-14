@@ -22,7 +22,7 @@ public class ImpSubcategoryService implements SubcategoryService {
     @Autowired
     public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository, @Qualifier("CatRepo") BRepository categoryRepository){
         this.subcategoryRepository=subcategoryRepository;
-        this.categoryRepository=subcategoryRepository;
+        this.categoryRepository=categoryRepository;
     }
     @Override
     public void createSubcategory(String categoryId,Subcategory subcategory) {
