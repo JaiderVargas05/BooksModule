@@ -6,7 +6,7 @@ import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Domain.CopyDispo;
 import edu.eci.cvds.Books.Domain.CopyState;
-import edu.eci.cvds.Books.Exception.CopyException;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Repository.CopyRepository;
 import edu.eci.cvds.Books.Service.CopyService;
@@ -29,54 +29,51 @@ public class ImpCopyService implements CopyService {
         this.codeGenerator=codeGenerator;
     }
     @Override
-    public boolean createCopy(String bookId, Copy e) throws CopyException {
+    public boolean createCopy(String bookId, Copy e)  {
         try{
             if (e == null){
-                throw new CopyException(CopyException.notNull);
+                throw new NotNullException("Copy", "null");
             } if(e.getState() == null){
-                throw new CopyException(CopyException.badEjemplar);
+                throw new BadStateException("Copy", e.getId());
             }
             Book book = (Book) bookRepository.BFindById(bookId);
             if (book == null){
-                throw new CopyException(CopyException.badBook);
+                throw new NotFoundException("Copy", bookId);
             }
             e.setBook(book);
-            // guardar ejemplar para que se genere el ID
             copyRepository.BSave(e);
-            // genera código de barras
             String barcode = codeGenerator.generateCode(e.getId());
             e.setBarCode(barcode);
-            // actualiza ejemplar con el código de barras
             copyRepository.BSave(e);
 
             return true;
         } catch (IllegalArgumentException ex){
-            throw new CopyException(CopyException.badState);
+            throw new BadStateException("Copy", e.getId());
         } catch (TransientObjectException | GenerateCodeException ex){
-            throw new CopyException(CopyException.badBook);
+            throw new BadObjectException("Copy", bookId);
         }
     }
 
-    public boolean deleteCopy(Copy e) throws CopyException {
+    public boolean deleteCopy(Copy e) {
         if (e == null){
-            throw new CopyException(CopyException.notNull);
+            throw new NotNullException("Copy", "null");
         } if (copyRepository.BFindById(e.getId()) == null){
-            throw new CopyException(CopyException.notFound);
+            throw new NotFoundException("Copy", e.getId());
         }
         copyRepository.BDelete(e.getId());
         return true;
     }
 
-    public Copy getCopyById(String id) throws CopyException {
+    public Copy getCopyById(String id)  {
         if (id == null){
-            throw new CopyException(CopyException.dataNotNull);
+            throw new NotNullException("Copy", "null");
         }
-        if(!isValidIdFormat(id)){
-            throw new CopyException(CopyException.badFormat);
+        if(!isValidIdFormat(id)) {
+            throw new BadFormatException("Copy ID", id);
         }
         Copy copy = (Copy)copyRepository.BFindById(id);
         if (copy == null){
-            throw new CopyException(CopyException.notFound);
+            throw new NotFoundException("Copy", id);
         }
         return copy;
     }
@@ -87,46 +84,46 @@ public class ImpCopyService implements CopyService {
         return copyRepository.BFindAll();
     }
 
-    public boolean updateCopies(Copy e) throws CopyException {
+    public boolean updateCopies(Copy e) {
         try {
             Copy oldCopy = (Copy)copyRepository.BFindById(e.getId());
             if (oldCopy == null) {
-                throw new CopyException(CopyException.notFound);
+                throw new NotFoundException("Copy", e.getId());
             } else {
                 if (e.getBook() == null || e.getState() == null || e.getDisponibility() == null || e.getBarCode() == null) {
-                    throw new CopyException(CopyException.badEjemplar);
+                    throw new BadObjectException("Copy", "Required fields are missing");
                 }
                 if (e.getState() != CopyState.DAMAGED || e.getState() != CopyState.GOOD_CONDITION || e.getState() != CopyState.FAIR) {
-                    throw new CopyException(CopyException.badState);
+                    throw new BadStateException("Copy", e.getState().name());
                 }
                 if (e.getDisponibility() != CopyDispo.AVAILABLE || e.getDisponibility() != CopyDispo.BORROWED) {
-                    throw new CopyException(CopyException.badDispo);
+                    throw new BadAvailabilityException("Copy",e.getDisponibility().name());
                 }
             }
-             copyRepository.BUpdate(e);
+            copyRepository.BUpdate(e);
             return true;
         } catch (IllegalArgumentException ex){
-            throw new CopyException(CopyException.badValues);
+            throw new BadValuesException("Copy", e.getId());
         }
     }
 
-    public List<Copy> findCopiesByBook(Book book) throws CopyException {
+    public List<Copy> findCopiesByBook(Book book)  {
         if(book == null){
-            throw new CopyException(CopyException.badBook);
+            throw new NotNullException("Copy", "null");
         }
         List<Copy> copies = ((CopyRepository) copyRepository).findCopyByBook(book);
         if(copies == null || copies.isEmpty()){
-            throw new CopyException(CopyException.noEjemplarsForBook);
+            throw new NotFoundException("Copy","for book with ID"+book.getBookId());
         }
         return copies;
     }
-    public Copy findCopyByBarcode(String barcode) throws CopyException {
+    public Copy findCopyByBarcode(String barcode) {
         if(barcode == null){
-            throw new CopyException(CopyException.barCodeIncorrect);
+            throw new NotNullException("Barcode", "null");
         }
         Copy copy = ((CopyRepository) copyRepository).findCopyByBarCode(barcode);
         if (copy == null){
-            throw new CopyException(CopyException.notFound);
+            throw new NotFoundException("Copy","with barcode" +barcode);
         }
         return copy;
     }

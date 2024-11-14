@@ -1,10 +1,8 @@
 package edu.eci.cvds.Books.Controller;
 
-import edu.eci.cvds.Books.Domain.Book;
+
 import edu.eci.cvds.Books.Domain.Category;
-import edu.eci.cvds.Books.Exception.BookException;
-import edu.eci.cvds.Books.Exception.CategoryException;
-import edu.eci.cvds.Books.Service.BookService;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -30,9 +28,9 @@ public class CategoryController {
         try{
             categoryService.createCategory(category);
             return new ResponseEntity<>(category.getCategoryId(), HttpStatus.OK);
-        }catch (CategoryException e){
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -42,9 +40,11 @@ public class CategoryController {
         try{
             categoryService.deleteCategory(id);
             return new ResponseEntity<>("Category deleted successfully",HttpStatus.OK);
-        }catch (CategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,9 +54,11 @@ public class CategoryController {
         try{
             categoryService.updateCategory(category);
             return new ResponseEntity<>("Category updated successfully",HttpStatus.OK);
-        } catch (CategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -66,9 +68,11 @@ public class CategoryController {
         try{
             Category category = categoryService.getCategory(id);
             return new ResponseEntity<>(category, HttpStatus.OK);
-        }catch (CategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -79,9 +83,11 @@ public class CategoryController {
         try{
             List<?> subcategories = categoryService.getSubcategories(id);
             return new ResponseEntity<>(subcategories, HttpStatus.OK);
-        }catch (CategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

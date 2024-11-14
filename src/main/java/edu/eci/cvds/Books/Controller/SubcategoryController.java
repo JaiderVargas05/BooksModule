@@ -1,10 +1,8 @@
 package edu.eci.cvds.Books.Controller;
 
-import edu.eci.cvds.Books.Domain.Category;
+
 import edu.eci.cvds.Books.Domain.Subcategory;
-import edu.eci.cvds.Books.Exception.CategoryException;
-import edu.eci.cvds.Books.Exception.SubcategoryException;
-import edu.eci.cvds.Books.Service.CategoryService;
+import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,9 +27,9 @@ public class SubcategoryController {
         try{
             subcategoryService.createSubcategory(categoryId,subcategory);
             return new ResponseEntity<>(subcategory.getSubcategoryId(), HttpStatus.OK);
-        }catch (SubcategoryException e){
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -41,9 +39,11 @@ public class SubcategoryController {
         try{
             subcategoryService.deleteSubcategory(id);
             return new ResponseEntity<>("Subcategory deleted successfully",HttpStatus.OK);
-        }catch (SubcategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -53,9 +53,11 @@ public class SubcategoryController {
         try{
             subcategoryService.updateSubcategory(subcategory);
             return new ResponseEntity<>("Subcategory updated successfully",HttpStatus.OK);
-        } catch (SubcategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,9 +67,11 @@ public class SubcategoryController {
         try{
             Subcategory subcategory = subcategoryService.getSubcategory(id);
             return new ResponseEntity<>(subcategory, HttpStatus.OK);
-        }catch (SubcategoryException e){
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

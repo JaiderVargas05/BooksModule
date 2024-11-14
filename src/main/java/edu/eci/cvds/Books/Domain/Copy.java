@@ -12,7 +12,7 @@ public class Copy {
     private Book book;
     @Enumerated(EnumType.STRING)
     private CopyState state;
-    @Column(length = 30)
+    //@Column(length = 30)
     private String barCode;
     @Enumerated(EnumType.STRING)
     private CopyDispo disponibility = CopyDispo.AVAILABLE;
