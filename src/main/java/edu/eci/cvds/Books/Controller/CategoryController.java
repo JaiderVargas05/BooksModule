@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Controller;
 
 
+import edu.eci.cvds.Books.Controller.RequestModel.CategoryRequest;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.CategoryService;
@@ -24,8 +25,14 @@ public class CategoryController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createCategory")
-    public ResponseEntity<?> createCategory(@RequestBody Category category){
+    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest){
         try{
+            Category category = new Category(categoryRequest.getCategoryId(),
+                    categoryRequest.getDescription(),
+                    categoryRequest.getBooks(),
+                    categoryRequest.getSubcategories(),
+                    categoryRequest.isActive());
+
             categoryService.createCategory(category);
             return new ResponseEntity<>(category.getCategoryId(), HttpStatus.OK);
         }catch (BadRequestException e){
@@ -50,8 +57,14 @@ public class CategoryController {
     }
     @CrossOrigin(origins = "*")
     @PatchMapping ("/updateCategory")
-    public ResponseEntity<?> updateCategory(@RequestBody Category category){
+    public ResponseEntity<?> updateCategory(@RequestBody CategoryRequest categoryRequest){
         try{
+            Category category = new Category(categoryRequest.getCategoryId(),
+                    categoryRequest.getDescription(),
+                    categoryRequest.getBooks(),
+                    categoryRequest.getSubcategories(),
+                    categoryRequest.isActive());
+
             categoryService.updateCategory(category);
             return new ResponseEntity<>("Category updated successfully",HttpStatus.OK);
         }catch(NotFoundException e){

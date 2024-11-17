@@ -37,7 +37,9 @@ public class BookController {
 //            // Guardar el libro con su categoría y subcategorías
             bookService.saveBook(book, bookRequest.getCategoryId(), bookRequest.getSubcategoryIds());
             //bookService.saveBook(book);
+
             return new ResponseEntity<>(book.getBookId(),HttpStatus.OK);
+
         }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerErrorException e){

@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Controller;
 
 
+import edu.eci.cvds.Books.Controller.RequestModel.SubcategoryRequest;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.SubcategoryService;
@@ -23,8 +24,15 @@ public class SubcategoryController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createSubcategory")
-    public ResponseEntity<?> createSubcategory(@RequestParam String categoryId,@RequestBody Subcategory subcategory){
+    public ResponseEntity<?> createSubcategory(@RequestParam String categoryId,@RequestBody SubcategoryRequest subcategoryRequest){
         try{
+            Subcategory subcategory = new Subcategory(subcategoryRequest.getBook(),
+                    subcategoryRequest.getSubcategoryId(),
+                    subcategoryRequest.getCategory(),
+                    subcategoryRequest.getDescription(),
+                    subcategoryRequest.isActive()
+            );
+
             subcategoryService.createSubcategory(categoryId,subcategory);
             return new ResponseEntity<>(subcategory.getSubcategoryId(), HttpStatus.OK);
         }catch (BadRequestException e){
@@ -49,8 +57,15 @@ public class SubcategoryController {
     }
     @CrossOrigin(origins = "*")
     @PatchMapping ("/updateSubcategory")
-    public ResponseEntity<?> updateSubcategory(@RequestBody Subcategory subcategory){
+    public ResponseEntity<?> updateSubcategory(@RequestBody SubcategoryRequest subcategoryRequest){
         try{
+            Subcategory subcategory = new Subcategory(subcategoryRequest.getBook(),
+                    subcategoryRequest.getSubcategoryId(),
+                    subcategoryRequest.getCategory(),
+                    subcategoryRequest.getDescription(),
+                    subcategoryRequest.isActive()
+            );
+
             subcategoryService.updateSubcategory(subcategory);
             return new ResponseEntity<>("Subcategory updated successfully",HttpStatus.OK);
         }catch(NotFoundException e){
