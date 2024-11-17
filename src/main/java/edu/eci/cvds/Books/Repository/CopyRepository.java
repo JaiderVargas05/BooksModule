@@ -21,8 +21,6 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
         this.save((Copy)copy);
     }
     default void BDelete(String id) {
-//        ((Copy)copy).setActive(false);
-//        this.save((Copy)copy);
         Copy copy = findById(id).orElse(null);
         copy.setActive(false);
         this.BSave(copy);
@@ -35,8 +33,6 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
         return findAll();
     }
     List<Copy> findCopyByBook(Book book);
-    @Query("SELECT b FROM Book b WHERE b.bookId = :bookId")
-    Book findBookById(@Param("bookId") String bookId);
     @Override
     public default List<?> BFindAllById(List<String> Ids){
         return findAllById(Ids);

@@ -29,7 +29,6 @@ public class BookController {
     @PostMapping("/saveBook")
     public ResponseEntity<?> saveBook(@RequestBody BookRequest bookRequest){
         try{
-
             String id = bookService.saveBook(bookRequest);
             return new ResponseEntity<>(id,HttpStatus.OK);
         }catch (BadRequestException e){
@@ -105,5 +104,20 @@ public class BookController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getAllBooks")
+    public ResponseEntity<?> getAllBooks(){
+        try{
+            List<?> books = bookService.getAllBooks();
+            return new ResponseEntity<>(books, HttpStatus.OK);
+        }catch(NotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (BadRequestException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (InternalServerErrorException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
