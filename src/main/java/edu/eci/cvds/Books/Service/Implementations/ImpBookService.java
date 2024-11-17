@@ -92,7 +92,7 @@ public class ImpBookService implements BookService {
     }
 
     @Override
-    public List<?> getAllBooks(String BookId) {
+    public List<?> getAllBooks() {
         return this.bookRepository.BFindAll();
     }
 
