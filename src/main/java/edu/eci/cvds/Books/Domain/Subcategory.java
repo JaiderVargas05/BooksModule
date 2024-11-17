@@ -17,34 +17,33 @@ public class Subcategory {
     private String description;
     private boolean active;
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
+    public Subcategory(Book book, String subcategoryId, Category category, String description, boolean active) {
+        this.book = book;
+        this.subcategoryId = subcategoryId;
+        this.category = category;
+        this.description = description;
         this.active = active;
     }
 
-    public Subcategory(){
-
+    public boolean isActive() {
+        return active;
     }
-
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    public Subcategory(){}
     public String getSubcategoryId() {
         return subcategoryId;
     }
-
     public Category getCategory() {
         return category;
     }
-
     public void setCategory(Category category) {
         this.category = category;
     }
-
     public void setSubcategoryId(String subcategoryId) {
         this.subcategoryId = subcategoryId;
     }
-
     public String getDescription(){
         return this.description;
     }

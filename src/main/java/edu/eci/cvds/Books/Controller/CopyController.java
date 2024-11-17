@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Controller;
 
 
+import edu.eci.cvds.Books.Controller.RequestModel.CopyRequest;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Exception.BadRequestException;
 import edu.eci.cvds.Books.Exception.InternalServerErrorException;
@@ -24,8 +25,16 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createCopy")
-    public ResponseEntity<?> createCopy(@RequestParam String bookId, @RequestBody Copy copy){
+    public ResponseEntity<?> createCopy(@RequestParam String bookId, @RequestBody CopyRequest copyRequest){
         try{
+            Copy copy = new Copy(copyRequest.getId(),
+                    copyRequest.getBook(),
+                    copyRequest.getState(),
+                    copyRequest.getBarCode(),
+                    copyRequest.getDisponibility(),
+                    copyRequest.isActive()
+            );
+
             copyService.createCopy(bookId, copy);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (BadRequestException e){
@@ -36,8 +45,16 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCopy(@RequestBody Copy copy){
+    public ResponseEntity<?> deleteCopy(@RequestBody CopyRequest copyRequest){
         try{
+            Copy copy = new Copy(copyRequest.getId(),
+                    copyRequest.getBook(),
+                    copyRequest.getState(),
+                    copyRequest.getBarCode(),
+                    copyRequest.getDisponibility(),
+                    copyRequest.isActive()
+            );
+
             copyService.deleteCopy(copy);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch(NotFoundException e){
@@ -76,8 +93,16 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @PatchMapping ("/update")
-    public ResponseEntity<?> updateCopy(Copy copy){
+    public ResponseEntity<?> updateCopy(@RequestBody CopyRequest copyRequest){
         try{
+            Copy copy = new Copy(copyRequest.getId(),
+                    copyRequest.getBook(),
+                    copyRequest.getState(),
+                    copyRequest.getBarCode(),
+                    copyRequest.getDisponibility(),
+                    copyRequest.isActive()
+            );
+
             copyService.updateCopies(copy);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch(NotFoundException e){

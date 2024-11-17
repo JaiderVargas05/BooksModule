@@ -10,7 +10,8 @@ import java.util.List;
 
 @Service
 public interface BookService {
-    String saveBook(BookRequest bookRequest);
+    void saveBook(Book book,String categoryId,List<String> subcategoriesIds);
+
 
     boolean deleteBook(String BookId);
 

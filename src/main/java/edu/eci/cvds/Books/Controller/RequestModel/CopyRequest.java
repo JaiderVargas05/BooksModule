@@ -1,73 +1,62 @@
-package edu.eci.cvds.Books.Domain;
+package edu.eci.cvds.Books.Controller.RequestModel;
 
-import jakarta.persistence.*;
+import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.CopyDispo;
+import edu.eci.cvds.Books.Domain.CopyState;
 
-@Entity
-public class Copy {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class CopyRequest {
     private String id;
-    @ManyToOne
-    @JoinColumn(name = "book_id")
     private Book book;
-    @Enumerated(EnumType.STRING)
     private CopyState state;
     private String barCode;
-    @Enumerated(EnumType.STRING)
-    private CopyDispo disponibility = CopyDispo.AVAILABLE;
-    private boolean active = true;
-
-    public Copy(Book book, String state) {
-        this.state = CopyState.valueOf(state.toUpperCase());
-        this.book = book;
-    }
-    public Copy() {
-    }
-
-    public Copy(String id, Book book, CopyState state, String barCode, CopyDispo disponibility, boolean active) {
-        this.id = id;
-        this.book = book;
-        this.state = state;
-        this.barCode = barCode;
-        this.disponibility = disponibility;
-        this.active = active;
-    }
+    private CopyDispo disponibility;
+    private boolean active;
 
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
-    public String getBook() {
-        return this.book.getBookId();
+
+    public Book getBook() {
+        return book;
     }
+
     public void setBook(Book book) {
         this.book = book;
     }
+
     public CopyState getState() {
         return state;
     }
+
     public void setState(CopyState state) {
         this.state = state;
     }
+
     public String getBarCode() {
         return barCode;
     }
+
     public void setBarCode(String barCode) {
         this.barCode = barCode;
     }
+
     public CopyDispo getDisponibility() {
         return disponibility;
     }
+
     public void setDisponibility(CopyDispo disponibility) {
         this.disponibility = disponibility;
     }
+
     public boolean isActive() {
         return active;
     }
+
     public void setActive(boolean active) {
         this.active = active;
     }
-
 }

@@ -17,9 +17,18 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade=CascadeType.ALL)
     private List<Subcategory> subcategories;
     private boolean active=true;
-    public Category(){
 
+    public Category(){
     }
+
+    public Category(String categoryId, String description, List<Book> books, List<Subcategory> subcategories, boolean active) {
+        this.categoryId = categoryId;
+        this.description = description;
+        this.books = books;
+        this.subcategories = subcategories;
+        this.active = active;
+    }
+
     public String getCategoryId() {
         return categoryId;
     }
