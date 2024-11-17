@@ -1,5 +1,6 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
+import edu.eci.cvds.Books.Controller.RequestModel.BookRequest;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Copy;
@@ -68,14 +69,23 @@ public class ImpBookService implements BookService {
         return book;
     }
     @Override
-    public String uploadImg(MultipartFile img){
+    public String uploadImg(MultipartFile img,String bookId){
         try {
-            String directoryPath = "images/";
-            String fileName = img.getOriginalFilename();
+            if(img==null || bookId==null){
+                throw new BadRequestException("Insufficient data");
+            }
+            String directoryPath = "src/main/resources/static/images/";
+            String fileName = bookId+".jpg";
             Path filePath = Paths.get(directoryPath + fileName);
             Files.createDirectories(filePath.getParent());
             Files.write(filePath, img.getBytes());
-            return filePath.toString();
+            Book book = this.getBook(bookId);
+            book.setImgPath("images/"+fileName);
+            if(book==null){
+                throw new NotFoundException("Book",bookId);
+            }
+            this.bookRepository.BSave(book);
+            return "images/"+fileName;
         } catch (Exception e) {
             throw new RuntimeException("Error saving the image.", e);
         }
@@ -87,23 +97,26 @@ public class ImpBookService implements BookService {
     }
 
     @Override
-    public void saveBook(Book book,String categoryId, List<String> subcategoryIds) {
+    public String saveBook(BookRequest bookRequest) {
+        Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
+                bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),
+                bookRequest.getYear());
         if (book == null){
             throw new NotNullException("Book","null");
         }
         if(book.getIsbn() == null){
             throw new BadObjectException("Book", book.getIsbn());
         }
-        //this.bookRepository.BSave(book);
-        Category category = (Category) categoryRepository.BFindById(categoryId);
+        Category category = (Category) categoryRepository.BFindById(bookRequest.getCategoryId());
         book.setCategory(category);
-        List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(subcategoryIds);
-        //List<Subcategory> subcategories = (List<Subcategory>) (List<?>) subcategoryRepository.BFindAllById(subcategoryIds);
+        List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(bookRequest.getSubcategoryIds());
         if (subcategories.isEmpty()) {
             throw new NotFoundException("Subcategories", "none found for provided IDs");
         }
         book.setSubcategories(subcategories);
+
         bookRepository.BSave(book);
+        return book.getBookId();
     }
     @Override
     public List<Copy> getCopies(String bookId){
