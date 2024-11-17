@@ -90,9 +90,9 @@ public class BookController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/uploadImg")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile img) {
+    public ResponseEntity<?> uploadImage(@RequestParam String bookId,@RequestParam("file") MultipartFile img) {
         try{
-            String path = this.bookService.uploadImg(img);
+            String path = this.bookService.uploadImg(img,bookId);
             return new ResponseEntity<>(path, HttpStatus.OK);
         }
         catch (InternalServerErrorException e){

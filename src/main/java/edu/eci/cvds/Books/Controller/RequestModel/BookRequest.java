@@ -1,5 +1,7 @@
 package edu.eci.cvds.Books.Controller.RequestModel;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public class BookRequest {
@@ -13,9 +15,21 @@ public class BookRequest {
     private String categoryId;
     private List<String> subcategoryIds;
 
+    private MultipartFile img;
+
     public String getIsbn() {
         return isbn;
     }
+
+
+    public MultipartFile getImg() {
+        return img;
+    }
+
+    public void setImg(MultipartFile img) {
+        this.img = img;
+    }
+
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
