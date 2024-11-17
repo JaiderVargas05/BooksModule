@@ -29,16 +29,8 @@ public class BookController {
     @PostMapping("/saveBook")
     public ResponseEntity<?> saveBook(@RequestBody BookRequest bookRequest){
         try{
-//            // Crear el libro a partir del BookRequest
-            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
-                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),
-                    bookRequest.getYear());
-//
-//            // Guardar el libro con su categoría y subcategorías
-            bookService.saveBook(book, bookRequest.getCategoryId(), bookRequest.getSubcategoryIds());
-            //bookService.saveBook(book);
-
-            return new ResponseEntity<>(book.getBookId(),HttpStatus.OK);
+            String id = bookService.saveBook(bookRequest);
+            return new ResponseEntity<>(id,HttpStatus.OK);
 
         }catch (BadRequestException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
