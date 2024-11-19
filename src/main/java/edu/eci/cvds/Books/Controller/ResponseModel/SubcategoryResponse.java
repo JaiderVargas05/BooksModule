@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-public class SubcategoryResponse extends Response<List<Subcategory>> {
+public class SubcategoryResponse extends Response<Object> {
 
     // Atributos finales con los mensajes
     public static final String SUCCESS_SUBCATEGORY_RETRIEVED = "Subcategories retrieved successfully";
@@ -22,5 +22,9 @@ public class SubcategoryResponse extends Response<List<Subcategory>> {
     // Constructor para una sola subcategoría (envuelta en una lista)
     public SubcategoryResponse(HttpStatus status, String message, Subcategory subcategory) {
         super(status, message, Collections.singletonList(subcategory));  // Envuelve la subcategoría en una lista
+    }
+
+    public SubcategoryResponse(HttpStatus status, String message, String id) {
+        super(status, message, id);
     }
 }

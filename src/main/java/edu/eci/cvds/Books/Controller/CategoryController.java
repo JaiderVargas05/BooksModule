@@ -2,7 +2,10 @@ package edu.eci.cvds.Books.Controller;
 
 
 import edu.eci.cvds.Books.Controller.RequestModel.CategoryRequest;
+import edu.eci.cvds.Books.Controller.ResponseModel.CategoryResponse;
+import edu.eci.cvds.Books.Controller.ResponseModel.SubcategoryResponse;
 import edu.eci.cvds.Books.Domain.Category;
+import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -25,7 +29,7 @@ public class CategoryController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createCategory")
-    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest){
+    public CategoryResponse createCategory(@RequestBody CategoryRequest categoryRequest){
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
@@ -33,75 +37,79 @@ public class CategoryController {
                     categoryRequest.getSubcategories(),
                     categoryRequest.isActive());
 
-            categoryService.createCategory(category);
-            return new ResponseEntity<>(category.getCategoryId(), HttpStatus.OK);
+            String id = categoryService.createCategory(category);
+            return new CategoryResponse(HttpStatus.OK,CategoryResponse.SUCCESS_CATEGORY_SAVED,id);
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
         }
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/deleteCategory")
-    public ResponseEntity<?> deleteCategory(@RequestParam String id){
+    public CategoryResponse deleteCategory(@RequestParam String id){
         try{
             categoryService.deleteCategory(id);
-            return new ResponseEntity<>("Category deleted successfully",HttpStatus.OK);
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS_CATEGORY_DELETED,Collections.emptyList());
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
         }
     }
     @CrossOrigin(origins = "*")
     @PatchMapping ("/updateCategory")
-    public ResponseEntity<?> updateCategory(@RequestBody CategoryRequest categoryRequest){
+    public CategoryResponse updateCategory(@RequestBody CategoryRequest categoryRequest){
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
                     categoryRequest.getBooks(),
                     categoryRequest.getSubcategories(),
-                    categoryRequest.isActive());
-
+                    categoryRequest.isActive()
+            );
             categoryService.updateCategory(category);
-            return new ResponseEntity<>("Category updated successfully",HttpStatus.OK);
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS_CATEGORY_UPDATED,category);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         } catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
         }
     }
     @CrossOrigin(origins = "*")
     @GetMapping("/getCategory")
-    public ResponseEntity<?> getCategory(@RequestParam String id){
+    public CategoryResponse getCategory(@RequestParam String id){
         try{
             Category category = categoryService.getCategory(id);
-            return new ResponseEntity<>(category, HttpStatus.OK);
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS_CATEGORY_RETRIEVED,category);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
         }
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getSubcategories")
-    public ResponseEntity<?> getSubcategories(@RequestParam String id){
+    public SubcategoryResponse getSubcategories(@RequestParam String id){
         try{
             List<?> subcategories = categoryService.getSubcategories(id);
-            return new ResponseEntity<>(subcategories, HttpStatus.OK);
+            return new SubcategoryResponse(HttpStatus.OK, SubcategoryResponse.SUCCESS_SUBCATEGORY_RETRIEVED, (List<Subcategory>) subcategories);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new SubcategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new SubcategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
         }
     }
 

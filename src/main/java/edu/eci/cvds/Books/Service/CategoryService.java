@@ -6,7 +6,7 @@ import edu.eci.cvds.Books.Domain.Subcategory;
 import java.util.List;
 
 public interface CategoryService {
-    public void createCategory(Category category);
+    public String createCategory(Category category);
     public void deleteCategory(String idCategory);
     public Category getCategory(String idCategory);
     public List<?> getCategories();

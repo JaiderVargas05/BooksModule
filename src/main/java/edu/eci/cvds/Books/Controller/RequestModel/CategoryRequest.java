@@ -1,7 +1,6 @@
 package edu.eci.cvds.Books.Controller.RequestModel;
 
 import edu.eci.cvds.Books.Domain.Book;
-import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 
 import java.util.List;
@@ -13,10 +12,10 @@ public class CategoryRequest {
     private List<Subcategory> subcategories;
     private boolean active;
 
+
     public String getCategoryId() {
         return categoryId;
     }
-
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }

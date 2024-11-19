@@ -29,7 +29,7 @@ public class ImpCopyService implements CopyService {
         this.codeGenerator=codeGenerator;
     }
     @Override
-    public boolean createCopy(String bookId, Copy e)  {
+    public String createCopy(String bookId, Copy e)  {
         try{
             if (e == null){
                 throw new NotNullException("Copy", "null");
@@ -46,7 +46,7 @@ public class ImpCopyService implements CopyService {
             e.setBarCode(barcode);
             copyRepository.BSave(e);
 
-            return true;
+            return e.getId();
         } catch (IllegalArgumentException ex){
             throw new BadStateException("Copy", e.getId());
         } catch (TransientObjectException | GenerateCodeException ex){

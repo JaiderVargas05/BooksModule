@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-public class CopyResponse extends Response<List<Copy>> {
+public class CopyResponse extends Response<Object> {
 
     // Atributos finales con los mensajes
     public static final String SUCCESS_COPY_RETRIEVED = "Copies retrieved successfully";
@@ -22,5 +22,9 @@ public class CopyResponse extends Response<List<Copy>> {
     // Constructor para una sola copia (envuelta en una lista)
     public CopyResponse(HttpStatus status, String message, Copy copy) {
         super(status, message, Collections.singletonList(copy));  // Envuelve la copia en una lista
+    }
+
+    public CopyResponse(HttpStatus status, String message, String id) {
+        super(status, message, id);
     }
 }

@@ -13,15 +13,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service("ImpSub")
 public class ImpSubcategoryService implements SubcategoryService {
+
     private final BRepository subcategoryRepository;
     private final BRepository categoryRepository;
+
     @Autowired
     public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository, @Qualifier("CatRepo") BRepository categoryRepository){
         this.subcategoryRepository=subcategoryRepository;
         this.categoryRepository=categoryRepository;
     }
     @Override
-    public void createSubcategory(String categoryId,Subcategory subcategory) {
+    public String createSubcategory(String categoryId,Subcategory subcategory) {
 
         if (subcategory == null){
             throw new NotNullException("Subcategory", "null");
@@ -34,6 +36,7 @@ public class ImpSubcategoryService implements SubcategoryService {
         }
         subcategory.setCategory(category);
         subcategoryRepository.BSave(subcategory);
+        return subcategory.getSubcategoryId();
     }
 
     @Override

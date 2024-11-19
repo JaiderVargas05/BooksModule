@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Controller;
 
 import edu.eci.cvds.Books.Controller.ResponseModel.BookResponse;
+import edu.eci.cvds.Books.Controller.ResponseModel.CopyResponse;
 import edu.eci.cvds.Books.Controller.ResponseModel.Response;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Controller.RequestModel.BookRequest;
@@ -35,7 +36,7 @@ public class BookController {
     public BookResponse saveBook(@RequestBody BookRequest bookRequest){
         try{
             String id = bookService.saveBook(bookRequest);
-            return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_SAVED,Collections.emptyList());
+            return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_SAVED,id);
 
         }catch (BadRequestException e){
             return new BookResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
@@ -109,16 +110,16 @@ public class BookController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getCopies")
-    public ResponseEntity<?> getTotalCopies(@RequestParam String bookId){
+    public CopyResponse getTotalCopies(@RequestParam String bookId){
         try{
             List<Copy> copies = bookService.getCopies(bookId);
-            return new ResponseEntity<>(copies, HttpStatus.OK);
+            return new CopyResponse(HttpStatus.OK, CopyResponse.SUCCESS_COPY_RETRIEVED,copies);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
         }
     }
 
