@@ -6,6 +6,7 @@ import edu.eci.cvds.Books.Domain.Copy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -24,5 +25,7 @@ public interface BookService {
     String uploadImg(MultipartFile img,String isbn);
 
     List<Copy> getCopies(String BookId);
+
+    List<Book> findByAuthor(HashMap<String,String> book);
 
 }

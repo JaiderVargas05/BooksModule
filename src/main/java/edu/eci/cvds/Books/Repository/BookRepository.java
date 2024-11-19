@@ -2,6 +2,7 @@ package edu.eci.cvds.Books.Repository;
 
 import edu.eci.cvds.Books.Domain.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,4 +39,7 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     public default List<?> BFindAllById(List<String> Ids){
         return findAllById(Ids);
     }
+    @Query("SELECT b FROM Book b WHERE b.author = :author AND b.bookId != :bookId")
+    List<Book> findBookByAuthor(String bookId, String author);
+
 }

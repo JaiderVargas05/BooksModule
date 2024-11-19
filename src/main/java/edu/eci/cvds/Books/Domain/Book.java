@@ -14,6 +14,7 @@ public class Book {
     private String bookId;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Copy> copies;
+    @Column(length = 250)
     private String description;
     private String title;
     private String author;

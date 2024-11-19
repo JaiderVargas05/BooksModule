@@ -7,6 +7,7 @@ import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
+import edu.eci.cvds.Books.Repository.BookRepository;
 import edu.eci.cvds.Books.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @Service("Imp")
@@ -123,5 +125,18 @@ public class ImpBookService implements BookService {
         Book book = this.getBook(bookId);
         if(book!=null)return book.getCopies();
         throw new NotFoundException("Book", bookId);
+    }
+    @Override
+    public List<Book> findByAuthor(HashMap<String,String> book) {
+        String bookId = book.get("bookId");
+        String author = book.get("author");
+        if (author == null || author == "" || bookId == null || bookId == "") {
+            throw new NotNullException("Author","null");
+        }
+        List<Book> books = ((BookRepository) bookRepository).findBookByAuthor(bookId,author);
+        if (books.isEmpty()){
+            throw new NotFoundException("Book", author);
+        }
+        return books;
     }
 }
