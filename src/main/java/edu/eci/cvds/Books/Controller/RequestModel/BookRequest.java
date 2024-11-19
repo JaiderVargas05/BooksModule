@@ -14,22 +14,18 @@ public class BookRequest {
     private Integer year;
     private String categoryId;
     private List<String> subcategoryIds;
-
     private MultipartFile img;
+
 
     public String getIsbn() {
         return isbn;
     }
-
-
     public MultipartFile getImg() {
         return img;
     }
-
     public void setImg(MultipartFile img) {
         this.img = img;
     }
-
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
