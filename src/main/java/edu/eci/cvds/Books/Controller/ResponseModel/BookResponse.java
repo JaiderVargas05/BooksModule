@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-public class BookResponse extends Response<Object> {
+public class BookResponse extends Response {
 
     public static final String SUCCESS_BOOK_SAVED = "Book saved successfully";
     public static final String SUCCESS_BOOK_RETRIEVED = "Book retrieved successfully";

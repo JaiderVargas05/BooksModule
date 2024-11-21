@@ -16,10 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/CategoryModule")
 public class CategoryController {
     private final CategoryService categoryService;
@@ -29,7 +30,7 @@ public class CategoryController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createCategory")
-    public CategoryResponse createCategory(@RequestBody CategoryRequest categoryRequest){
+    public Object createCategory(@RequestBody CategoryRequest categoryRequest){
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
@@ -38,6 +39,7 @@ public class CategoryController {
                     categoryRequest.isActive());
 
             String id = categoryService.createCategory(category);
+            //return  new ResponseEntity<>(HttpStatus.OK);
             return new CategoryResponse(HttpStatus.OK,CategoryResponse.SUCCESS_CATEGORY_SAVED,id);
         }catch (BadRequestException e){
             return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());

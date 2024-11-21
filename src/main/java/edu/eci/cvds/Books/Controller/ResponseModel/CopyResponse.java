@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-public class CopyResponse extends Response<Object> {
-
+public class CopyResponse extends Response {
     // Atributos finales con los mensajes
     public static final String SUCCESS_COPY_RETRIEVED = "Copies retrieved successfully";
     public static final String SUCCESS_COPY_SAVED = "Copy saved successfully";

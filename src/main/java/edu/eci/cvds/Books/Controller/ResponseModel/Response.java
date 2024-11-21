@@ -2,13 +2,13 @@ package edu.eci.cvds.Books.Controller.ResponseModel;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class Response<T> {
+public abstract class Response {
 
     HttpStatus status;
     String message;
-    T body;
+    Object body;
 
-    protected Response(HttpStatus status, String message, T body) {
+    protected Response(HttpStatus status, String message, Object body) {
         this.status = status;
         this.message = message;
         this.body = body;
@@ -30,11 +30,11 @@ public abstract class Response<T> {
         this.message = message;
     }
 
-    public T getBody() {
+    public Object getBody() {
         return body;
     }
 
-    public void setBody(T body) {
+    public void setBody(Object body) {
         this.body = body;
     }
 }

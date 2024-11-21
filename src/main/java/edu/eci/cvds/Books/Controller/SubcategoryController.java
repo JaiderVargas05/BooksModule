@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/SubcategoryModule")
 public class SubcategoryController {
     private final SubcategoryService subcategoryService;

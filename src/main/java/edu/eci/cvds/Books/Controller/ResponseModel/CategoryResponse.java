@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-public class CategoryResponse extends Response<Object> {
+public class CategoryResponse extends Response{
     public static final String SUCCESS_CATEGORY_SAVED = "Category saved successfully";
     public static final String SUCCESS_CATEGORY_RETRIEVED = "Category retrieved successfully";
     public static final String SUCCESS_CATEGORY_UPDATED = "Category updated successfully";

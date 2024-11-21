@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-public class SubcategoryResponse extends Response<Object> {
+public class SubcategoryResponse extends Response {
 
     // Atributos finales con los mensajes
     public static final String SUCCESS_SUBCATEGORY_RETRIEVED = "Subcategories retrieved successfully";
