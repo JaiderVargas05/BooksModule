@@ -50,10 +50,8 @@ public class Category {
         this.description = description;
     }
 
-    public List<String> getBooks() {
-        return books.stream()
-                .map(Book::getTitle)
-                .collect(Collectors.toList());
+    public List<Book> getBooks() {
+        return books;
     }
     public List<String> getSubcategories(){
         return subcategories.stream()
