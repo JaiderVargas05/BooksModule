@@ -1,6 +1,8 @@
 package edu.eci.cvds.Books.Controller;
 
 
+import edu.eci.cvds.Books.Controller.RequestModel.CopyRequest;
+import edu.eci.cvds.Books.Controller.ResponseModel.CopyResponse;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Exception.BadRequestException;
 import edu.eci.cvds.Books.Exception.InternalServerErrorException;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 import java.util.List;
 
 
@@ -24,83 +28,109 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createCopy")
-    public ResponseEntity<?> createCopy(@RequestParam String bookId, @RequestBody Copy copy){
+    public CopyResponse createCopy(@RequestParam String bookId, @RequestBody CopyRequest copyRequest){
         try{
-            copyService.createCopy(bookId, copy);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Copy copy = new Copy(copyRequest.getId(),
+                    copyRequest.getBook(),
+                    copyRequest.getState(),
+                    copyRequest.getBarCode(),
+                    copyRequest.getDisponibility(),
+                    copyRequest.isActive()
+            );
+
+            String id = copyService.createCopy(bookId, copy);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_SAVED,id);
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
         }
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCopy(@RequestBody Copy copy){
+    public CopyResponse deleteCopy(@RequestBody CopyRequest copyRequest){
         try{
+            Copy copy = new Copy(copyRequest.getId(),
+                    copyRequest.getBook(),
+                    copyRequest.getState(),
+                    copyRequest.getBarCode(),
+                    copyRequest.getDisponibility(),
+                    copyRequest.isActive()
+            );
+
             copyService.deleteCopy(copy);
-            return new ResponseEntity<>(HttpStatus.OK);
+
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_DELETED, copy);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
         }
     }
     @CrossOrigin(origins = "*")
     @GetMapping("/getCopy")
-    public ResponseEntity<?> getCopy(@RequestParam String id){
+    public CopyResponse getCopy(@RequestParam String id){
         try{
             Copy copy = copyService.getCopyById(id);
-            return new ResponseEntity<>(copy, HttpStatus.OK);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_RETRIEVED, copy);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
         }catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
         }
     }
     @CrossOrigin(origins = "*")
     @GetMapping("/findAll")
-    public ResponseEntity<?> findCopies(){
+    public CopyResponse findCopies(){
         try{
             List<?> copies = copyService.findAllCopies();
-            return new ResponseEntity<>(copies, HttpStatus.OK);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_RETRIEVED, (List<Copy>) copies);
         } catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
         }catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
         }
     }
     @CrossOrigin(origins = "*")
     @PatchMapping ("/update")
-    public ResponseEntity<?> updateCopy(Copy copy){
+    public CopyResponse updateCopy(@RequestBody CopyRequest copyRequest){
         try{
+            Copy copy = new Copy(copyRequest.getId(),
+                    copyRequest.getBook(),
+                    copyRequest.getState(),
+                    copyRequest.getBarCode(),
+                    copyRequest.getDisponibility(),
+                    copyRequest.isActive()
+            );
+
             copyService.updateCopies(copy);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_UPDATED, copy);
+
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
         } catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
         }
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/findByBarCode")
-    public ResponseEntity<?> findCopyByBarcode(String barcode){
+    public CopyResponse findCopyByBarcode(String barcode){
         try{
             Copy copy = copyService.findCopyByBarcode(barcode);
-            return new ResponseEntity<>(copy, HttpStatus.OK);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_RETRIEVED, copy);
         }catch(NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
         } catch (BadRequestException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
         }
     }
 

@@ -19,7 +19,7 @@ public class ImpCategoryService implements CategoryService {
         this.categoryRepository=categoryRepository;
     }
     @Override
-    public void createCategory(Category category) {
+    public String createCategory(Category category) {
         if (category == null){
             throw new NotNullException("Category", "null");
         }
@@ -27,6 +27,7 @@ public class ImpCategoryService implements CategoryService {
             throw new BadObjectException("Category", "null description");
         }
         this.categoryRepository.BSave(category);
+        return category.getCategoryId();
     }
 
     @Override

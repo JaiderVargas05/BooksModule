@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface CopyService {
-    boolean createCopy(String bookId, Copy copy);
+    String createCopy(String bookId, Copy copy);
     boolean deleteCopy(Copy copy);
     Copy getCopyById(String id) ;
     List<?> findAllCopies();

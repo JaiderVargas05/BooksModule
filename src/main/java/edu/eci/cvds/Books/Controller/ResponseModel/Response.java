@@ -1,23 +1,24 @@
 package edu.eci.cvds.Books.Controller.ResponseModel;
 
+import org.springframework.http.HttpStatus;
+
 public abstract class Response {
-    String code;
-    String status;
+
+    HttpStatus status;
     String message;
+    Object body;
 
-    public String getCode() {
-        return code;
+    protected Response(HttpStatus status, String message, Object body) {
+        this.status = status;
+        this.message = message;
+        this.body = body;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getStatus() {
+    public HttpStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(HttpStatus status) {
         this.status = status;
     }
 
@@ -27,5 +28,13 @@ public abstract class Response {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Object getBody() {
+        return body;
+    }
+
+    public void setBody(Object body) {
+        this.body = body;
     }
 }
