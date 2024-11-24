@@ -34,7 +34,7 @@ public class SubcategoryController {
                     subcategoryRequest.getDescription(),
                     subcategoryRequest.isActive()
             );
-            String id = subcategoryService.createSubcategory(categoryId,subcategory);
+            String id = subcategoryService.createSubcategory(subcategory);
             return new SubcategoryResponse(HttpStatus.OK,SubcategoryResponse.SUCCESS_SUBCATEGORY_SAVED,id);
         }catch (BadRequestException e){
             return new SubcategoryResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());

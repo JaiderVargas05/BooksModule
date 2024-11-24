@@ -5,14 +5,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public class BookRequest {
+    private String bookId;
     private String isbn;
     private String description;
     private String title;
     private String author;
+    private String collection;
     private String editorial;
     private String edition;
-    private Integer year;
-    private String categoryId;
+    private String recommendedAges;
+    private String language;
+    private List<String> categoryIds;
     private List<String> subcategoryIds;
     private MultipartFile img;
 
@@ -59,23 +62,49 @@ public class BookRequest {
     public void setEdition(String edition) {
         this.edition = edition;
     }
-    public Integer getYear() {
-        return year;
+
+    public List<String> getCategoryIds() {
+        return categoryIds;
     }
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-    public String getCategoryId() {
-        return categoryId;
-    }
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryIds(List<String> categoryIds) {
+        this.categoryIds = categoryIds;
     }
     public List<String> getSubcategoryIds() {
         return subcategoryIds;
     }
     public void setSubcategoryIds(List<String> subcategoryIds) {
         this.subcategoryIds = subcategoryIds;
+    }
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
+    public String getRecommendedAges() {
+        return recommendedAges;
+    }
+
+    public void setRecommendedAges(String recommendedAges) {
+        this.recommendedAges = recommendedAges;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 }
 

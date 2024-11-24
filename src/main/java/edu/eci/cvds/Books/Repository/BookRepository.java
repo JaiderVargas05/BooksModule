@@ -41,5 +41,6 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     }
     @Query("SELECT b FROM Book b WHERE b.author = :author AND b.bookId != :bookId")
     List<Book> findBookByAuthor(String bookId, String author);
+    Book findByIsbn(String isbn);
 
 }

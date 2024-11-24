@@ -34,8 +34,6 @@ public class CategoryController {
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
-                    categoryRequest.getBooks(),
-                    categoryRequest.getSubcategories(),
                     categoryRequest.isActive());
 
             String id = categoryService.createCategory(category);
@@ -68,8 +66,6 @@ public class CategoryController {
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
-                    categoryRequest.getBooks(),
-                    categoryRequest.getSubcategories(),
                     categoryRequest.isActive()
             );
             categoryService.updateCategory(category);
@@ -99,21 +95,6 @@ public class CategoryController {
         }
     }
 
-    @CrossOrigin(origins = "*")
-    @GetMapping("/getSubcategories")
-    public SubcategoryResponse getSubcategories(@RequestParam String id){
-        try{
-            List<?> subcategories = categoryService.getSubcategories(id);
-            return new SubcategoryResponse(HttpStatus.OK, SubcategoryResponse.SUCCESS_SUBCATEGORY_RETRIEVED, (List<Subcategory>) subcategories);
-        }catch(NotFoundException e){
-            return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
-        }catch (BadRequestException e){
-            return new SubcategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
-        } catch (InternalServerErrorException e){
-            return new SubcategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
-
-        }
-    }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getCategories")
