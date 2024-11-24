@@ -96,4 +96,19 @@ public class CategoryController {
     }
 
 
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getCategories")
+    public CategoryResponse getCategories(){
+        try{
+            List<?> categories = categoryService.getCategories();
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS_CATEGORY_RETRIEVED, (List<Category>) categories);
+        }catch(NotFoundException e){
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
+        }catch (BadRequestException e){
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
+        }
+    }
 }
