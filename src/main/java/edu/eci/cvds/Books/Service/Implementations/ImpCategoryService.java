@@ -58,12 +58,6 @@ public class ImpCategoryService implements CategoryService {
     }
 
     @Override
-    public List<String> getSubcategories(String categoryId) {
-        Category category = this.getCategory(categoryId);
-        return category.getSubcategories();
-    }
-
-    @Override
     public void updateCategory(Category category) {
         try {
             Category oldCategory = (Category)categoryRepository.BFindById(category.getCategoryId());

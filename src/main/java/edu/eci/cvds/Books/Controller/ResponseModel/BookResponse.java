@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Controller.ResponseModel;
 
 
+
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ public class BookResponse extends Response {
     public static final String SUCCESS_BOOK_UPDATED = "Book updated successfully";
     public static final String SUCCESS_BOOK_DELETED = "Book deleted successfully";
 
-    public BookResponse(HttpStatus status, String message, List<Book> body) {
+    public BookResponse(HttpStatus status, String message, List<?> body) {
         super(status, message, body);
     }
 
@@ -26,5 +27,6 @@ public class BookResponse extends Response {
     public BookResponse(HttpStatus status, String message, String id) {
         super(status, message, id);
     }
+
 }
 

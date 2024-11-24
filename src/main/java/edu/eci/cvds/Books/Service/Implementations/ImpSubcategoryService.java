@@ -15,26 +15,19 @@ import java.util.List;
 public class ImpSubcategoryService implements SubcategoryService {
 
     private final BRepository subcategoryRepository;
-    private final BRepository categoryRepository;
 
     @Autowired
-    public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository, @Qualifier("CatRepo") BRepository categoryRepository){
+    public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository){
         this.subcategoryRepository=subcategoryRepository;
-        this.categoryRepository=categoryRepository;
     }
     @Override
-    public String createSubcategory(String categoryId,Subcategory subcategory) {
+    public String createSubcategory(Subcategory subcategory) {
 
         if (subcategory == null){
             throw new NotNullException("Subcategory", "null");
         } if(subcategory.getDescription() == null || subcategory.getDescription().isEmpty() ){
             throw new BadObjectException("Subcategory", "null or empty description");
         }
-        Category category = (Category) categoryRepository.BFindById(categoryId);
-        if (category == null){
-            throw new NotFoundException("Category", categoryId);
-        }
-        subcategory.setCategory(category);
         subcategoryRepository.BSave(subcategory);
         return subcategory.getSubcategoryId();
     }

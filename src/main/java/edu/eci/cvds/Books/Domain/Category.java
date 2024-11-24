@@ -12,20 +12,14 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String categoryId;
     private String description;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Book> books;
-    @OneToMany(mappedBy = "category", cascade=CascadeType.ALL)
-    private List<Subcategory> subcategories;
     private boolean active=true;
 
     public Category(){
     }
 
-    public Category(String categoryId, String description, List<Book> books, List<Subcategory> subcategories, boolean active) {
+    public Category(String categoryId, String description, boolean active) {
         this.categoryId = categoryId;
         this.description = description;
-        this.books = books;
-        this.subcategories = subcategories;
         this.active = active;
     }
 
@@ -48,17 +42,6 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<String> getBooks() {
-        return books.stream()
-                .map(Book::getTitle)
-                .collect(Collectors.toList());
-    }
-    public List<String> getSubcategories(){
-        return subcategories.stream()
-                .map(Subcategory::getDescription)
-                .collect(Collectors.toList());
     }
 
 }

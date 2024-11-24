@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,20 +15,31 @@ public class Book {
     private String bookId;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Copy> copies;
-    @Column(length = 250)
+    @Column(length = 2000)
     private String description;
     private String title;
     private String author;
+    private String collection;
     private String editorial;
     private String edition;
+    private String recommendedAges;
+    private String language;
     private String isbn;
     private String imgPath;
-
-    private Integer year;
     private boolean active = true;
-    @ManyToOne()
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "book_category_ map",
+            joinColumns = @JoinColumn(
+                    name = "book_id",
+                    referencedColumnName = "bookId"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "category_id",
+                    referencedColumnName = "categoryId"
+            )
+    )
+    private List<Category> categories;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "book_subcategory_ map",
@@ -45,14 +57,16 @@ public class Book {
     public Book(){
 
     }
-    public Book(String isbn, String description, String title, String author, String editorial, String edition, Integer year) {
+    public Book(String isbn, String description, String title, String author, String editorial, String edition, String collection, String recommendedAges, String language) {
         this.isbn = isbn;
         this.description = description;
         this.title = title;
         this.author = author;
+        this.collection = collection;
         this.editorial = editorial;
         this.edition = edition;
-        this.year = year;
+        this.recommendedAges = recommendedAges;
+        this.language = language;
     }
 
     public boolean isActive() {
@@ -120,13 +134,6 @@ public class Book {
         this.editorial = editorial;
     }
 
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
 
     public String getIsbn() {
         return isbn;
@@ -153,11 +160,37 @@ public class Book {
         this.imgPath = imgPath;
     }
 
-    public String getCategory() {
-        return category.getDescription();
+    public List<String> getCategories() {
+        return categories.stream()
+                .map(Category::getDescription)
+                .collect(Collectors.toList());
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
+    public String getRecommendedAges() {
+        return recommendedAges;
+    }
+
+    public void setRecommendedAges(String recommendedAges) {
+        this.recommendedAges = recommendedAges;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

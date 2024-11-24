@@ -10,6 +10,5 @@ public interface CategoryService {
     public void deleteCategory(String idCategory);
     public Category getCategory(String idCategory);
     public List<?> getCategories();
-    public List<String> getSubcategories(String idCategory);
     public void updateCategory(Category category);
 }
