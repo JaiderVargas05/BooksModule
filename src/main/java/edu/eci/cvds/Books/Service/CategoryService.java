@@ -1,5 +1,6 @@
 package edu.eci.cvds.Books.Service;
 
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 
@@ -11,4 +12,7 @@ public interface CategoryService {
     public Category getCategory(String idCategory);
     public List<?> getCategories();
     public void updateCategory(Category category);
+    public List<Book> getBooks(String idCategory);
+
+
 }

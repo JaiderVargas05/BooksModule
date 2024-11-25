@@ -8,14 +8,11 @@ public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String subcategoryId;
-    @ManyToOne
-    @JoinColumn(name = "bookId")
-    private Book book;
     private String description;
     private boolean active;
 
-    public Subcategory(Book book, String subcategoryId, Category category, String description, boolean active) {
-        this.book = book;
+    public Subcategory(String subcategoryId, Category category, String description, boolean active) {
+
         this.subcategoryId = subcategoryId;
         this.description = description;
         this.active = active;
