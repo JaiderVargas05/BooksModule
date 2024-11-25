@@ -1,10 +1,12 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
 
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
+import edu.eci.cvds.Books.Repository.BookRepository;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,9 +16,11 @@ import java.util.List;
 @Service("ImpCat")
 public class ImpCategoryService implements CategoryService {
     private final BRepository categoryRepository;
+    private final BRepository bookRepository;
     @Autowired
-    public ImpCategoryService(@Qualifier("CatRepo") BRepository categoryRepository){
+    public ImpCategoryService(@Qualifier("CatRepo") BRepository categoryRepository,@Qualifier("BookRepo") BRepository bookRepository){
         this.categoryRepository=categoryRepository;
+        this.bookRepository=bookRepository;
     }
     @Override
     public String createCategory(Category category) {
@@ -72,5 +76,13 @@ public class ImpCategoryService implements CategoryService {
         } catch (IllegalArgumentException ex){
             throw new BadValuesException("Invalid values for Category with ID", category.getCategoryId());
         }
+    }
+    @Override
+    public List<Book> getBooks(String idCategory){
+        Category category = (Category) this.categoryRepository.BFindById(idCategory);
+        if(category==null) throw new NotFoundException(idCategory);
+        List<Book> books = ((BookRepository)this.bookRepository).findByCategories(category);
+        if(books.isEmpty()) throw new NotFoundException("Books");
+        return books;
     }
 }

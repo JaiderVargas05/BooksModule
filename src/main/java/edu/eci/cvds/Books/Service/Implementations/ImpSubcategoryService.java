@@ -1,10 +1,12 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
 
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
+import edu.eci.cvds.Books.Repository.BookRepository;
 import edu.eci.cvds.Books.Service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,10 +17,12 @@ import java.util.List;
 public class ImpSubcategoryService implements SubcategoryService {
 
     private final BRepository subcategoryRepository;
+    private final BRepository bookRepository;
 
     @Autowired
-    public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository){
+    public ImpSubcategoryService(@Qualifier("SubRepo") BRepository subcategoryRepository,@Qualifier("BookRepo") BRepository bookRepository){
         this.subcategoryRepository=subcategoryRepository;
+        this.bookRepository=bookRepository;
     }
     @Override
     public String createSubcategory(Subcategory subcategory) {
@@ -74,5 +78,13 @@ public class ImpSubcategoryService implements SubcategoryService {
         } catch (IllegalArgumentException ex){
             throw new BadValuesException("Invalid values for Subcategory with ID",subcategory.getSubcategoryId());
         }
+    }
+    @Override
+    public List<Book> getBooks(String idSubcategory){
+        Subcategory subcategory = (Subcategory) this.subcategoryRepository.BFindById(idSubcategory);
+        if(subcategory==null) throw new NotFoundException(idSubcategory);
+        List<Book> books = ((BookRepository)this.bookRepository).findBySubcategories(subcategory);
+        if(books.isEmpty()) throw new NotFoundException("Books");
+        return books;
     }
 }

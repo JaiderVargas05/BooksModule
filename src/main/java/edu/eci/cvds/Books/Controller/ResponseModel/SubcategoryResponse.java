@@ -15,7 +15,7 @@ public class SubcategoryResponse extends Response {
     public static final String SUCCESS_SUBCATEGORY_DELETED = "Subcategory deleted successfully";
 
     // Constructor principal
-    public SubcategoryResponse(HttpStatus status, String message, List<Subcategory> body) {
+    public SubcategoryResponse(HttpStatus status, String message, List<?> body) {
         super(status, message, body);
     }
 

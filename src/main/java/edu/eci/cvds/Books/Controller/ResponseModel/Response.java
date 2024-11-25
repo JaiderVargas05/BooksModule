@@ -3,7 +3,7 @@ package edu.eci.cvds.Books.Controller.ResponseModel;
 import org.springframework.http.HttpStatus;
 
 public abstract class Response {
-
+    public static  final String SUCCESS = "Transaction Successfully";
     HttpStatus status;
     String message;
     Object body;

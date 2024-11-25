@@ -11,8 +11,10 @@ public class CategoryResponse extends Response{
     public static final String SUCCESS_CATEGORY_UPDATED = "Category updated successfully";
     public static final String SUCCESS_CATEGORY_DELETED = "Category deleted successfully";
 
+
+
     // Constructor para múltiples categorías
-    public CategoryResponse(HttpStatus status, String message, List<Category> body) {
+    public CategoryResponse(HttpStatus status, String message, List<?> body) {
         super(status, message, body);
     }
 

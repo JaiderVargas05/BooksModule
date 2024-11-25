@@ -4,6 +4,7 @@ package edu.eci.cvds.Books.Controller;
 import edu.eci.cvds.Books.Controller.RequestModel.CategoryRequest;
 import edu.eci.cvds.Books.Controller.ResponseModel.CategoryResponse;
 import edu.eci.cvds.Books.Controller.ResponseModel.SubcategoryResponse;
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
@@ -102,6 +103,21 @@ public class CategoryController {
         try{
             List<?> categories = categoryService.getCategories();
             return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS_CATEGORY_RETRIEVED, (List<Category>) categories);
+        }catch(NotFoundException e){
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
+        }catch (BadRequestException e){
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getBooks")
+    public CategoryResponse getBooks(@RequestParam String idCategory){
+        try{
+            List<?> books = categoryService.getBooks(idCategory);
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, (List<Book>) books);
         }catch(NotFoundException e){
             return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){

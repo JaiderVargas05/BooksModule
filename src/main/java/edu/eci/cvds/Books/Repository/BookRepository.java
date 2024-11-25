@@ -1,6 +1,8 @@
 package edu.eci.cvds.Books.Repository;
 
 import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.Category;
+import edu.eci.cvds.Books.Domain.Subcategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -42,5 +44,8 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     @Query("SELECT b FROM Book b WHERE b.author = :author AND b.bookId != :bookId")
     List<Book> findBookByAuthor(String bookId, String author);
     Book findByIsbn(String isbn);
+
+    List<Book> findByCategories(Category category);
+    List<Book> findBySubcategories(Subcategory subcategory);
 
 }
