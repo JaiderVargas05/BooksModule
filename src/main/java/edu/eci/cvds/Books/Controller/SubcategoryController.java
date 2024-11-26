@@ -112,7 +112,7 @@ public class SubcategoryController {
     @GetMapping("/getBooks")
     public SubcategoryResponse getBooks(@RequestParam String idSubcategory){
         try{
-            List<Book> books = subcategoryService.getBooks(idSubcategory);
+            List<?> books = subcategoryService.getBooks(idSubcategory);
             return new SubcategoryResponse(HttpStatus.OK,SubcategoryResponse.SUCCESS,books);
         }catch(NotFoundException e){
             return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());

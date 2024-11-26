@@ -258,7 +258,12 @@ public class ImpBookService implements BookService {
                 try{
                     String bookId = this.saveBook(bookRequest);
                 } catch (Exception e) {
-                    jsonList.add(objectMapper.createObjectNode());
+                    ObjectNode errorNode = objectMapper.createObjectNode();
+                    errorNode.put("error", e.getMessage()); // Mensaje del error
+                    errorNode.put("isbn", bookRequest.getIsbn());
+                    errorNode.put("title", bookRequest.getTitle());
+                    errorNode.put("author", bookRequest.getAuthor());
+                    jsonList.add(errorNode);
                 }
 
             }

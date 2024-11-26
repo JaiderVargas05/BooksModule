@@ -13,5 +13,6 @@ public interface SubcategoryService {
     public Subcategory getSubcategory(String idSubcategory);
     public List<?> getSubcategories();
     public void updateSubcategory(Subcategory subcategory);
-    public List<Book> getBooks(String idSubcategory);
+    public List<?> getBooks(String idSubcategory);
+
 }

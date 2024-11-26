@@ -12,7 +12,8 @@ public class Copy {
     private Book book;
     //@Enumerated(EnumType.STRING)
     private String state;
-    @Column(length = 50000)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String barCode;
     private String ubication;
     @Enumerated(EnumType.STRING)

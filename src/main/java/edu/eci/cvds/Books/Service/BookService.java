@@ -22,12 +22,8 @@ public interface BookService {
     Book getBook(String book);
 
     List<?> getAllBooks();
-
     String uploadImg(MultipartFile img,String isbn);
-
     List<Copy> getCopies(String BookId);
-
     List<Book> findByAuthor(HashMap<String,String> book);
     List<ObjectNode> saveBooks(MultipartFile file);
-
 }
