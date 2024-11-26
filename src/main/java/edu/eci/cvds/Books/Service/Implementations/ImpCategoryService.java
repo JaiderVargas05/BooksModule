@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 @Service("ImpCat")
 public class ImpCategoryService implements CategoryService {
@@ -84,5 +85,16 @@ public class ImpCategoryService implements CategoryService {
         List<Book> books = ((BookRepository)this.bookRepository).findByCategories(category);
         if(books.isEmpty()) throw new NotFoundException("Books");
         return books;
+    }
+    @Override
+    public HashMap<String,List<Book>> getBooksByCategories(){
+        HashMap<String,List<Book>> booksByCategory = new HashMap<>();
+        List<Category> categories = (List<Category>) this.categoryRepository.BFindAll();
+        if(categories.isEmpty()) throw new NotFoundException("Books");
+        for(Category category: categories) {
+            List<Book> books = ((BookRepository) this.bookRepository).findByCategories(category);
+            booksByCategory.put(category.getDescription(), books);
+        }
+        return booksByCategory;
     }
 }

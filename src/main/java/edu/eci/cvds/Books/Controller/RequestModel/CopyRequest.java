@@ -7,8 +7,13 @@ import edu.eci.cvds.Books.Domain.CopyState;
 public class CopyRequest {
     private String id;
     private Book book;
-    private CopyState state;
+
+    private String bookId;
+
+    private String isbn;
+    private String state;
     private String barCode;
+    private String ubication;
     private CopyDispo disponibility;
     private boolean active;
 
@@ -28,11 +33,11 @@ public class CopyRequest {
         this.book = book;
     }
 
-    public CopyState getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(CopyState state) {
+    public void setState(String state) {
         this.state = state;
     }
 
@@ -58,5 +63,29 @@ public class CopyRequest {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getUbication() {
+        return ubication;
+    }
+
+    public void setUbication(String ubication) {
+        this.ubication = ubication;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }

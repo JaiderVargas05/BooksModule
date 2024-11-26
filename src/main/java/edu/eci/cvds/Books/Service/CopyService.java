@@ -1,8 +1,12 @@
 package edu.eci.cvds.Books.Service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.eci.cvds.Books.Controller.RequestModel.CopyRequest;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Copy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 
@@ -15,4 +19,8 @@ public interface CopyService {
     boolean updateCopies(Copy copy);
     List<Copy> findCopiesByBook(Book book);
     Copy findCopyByBarcode(String barcode);
+
+    List<ObjectNode> saveCopies(MultipartFile file);
+
+    String createCopyByIsbn(String isbn,Copy copy);
 }

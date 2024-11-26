@@ -4,6 +4,7 @@ import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface SubcategoryService {
@@ -12,6 +13,5 @@ public interface SubcategoryService {
     public Subcategory getSubcategory(String idSubcategory);
     public List<?> getSubcategories();
     public void updateSubcategory(Subcategory subcategory);
-
     public List<Book> getBooks(String idSubcategory);
 }
