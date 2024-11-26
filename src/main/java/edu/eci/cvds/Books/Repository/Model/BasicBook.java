@@ -1,5 +1,7 @@
 package edu.eci.cvds.Books.Repository.Model;
 
+import java.util.List;
+
 public interface BasicBook {
     String getBookId();
     String getTitle();
@@ -8,4 +10,5 @@ public interface BasicBook {
     String getRecommendedAges();
     String getImgPath();
     String getDescription();
+    //List<String> getCategories();
 }
