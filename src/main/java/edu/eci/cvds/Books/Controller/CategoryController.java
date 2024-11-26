@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -117,7 +118,23 @@ public class CategoryController {
     public CategoryResponse getBooks(@RequestParam String idCategory){
         try{
             List<?> books = categoryService.getBooks(idCategory);
-            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, (List<Book>) books);
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, (List<?>) books);
+        }catch(NotFoundException e){
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
+        }catch (BadRequestException e){
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getBooksByCategories")
+    public CategoryResponse getBooksByCategories(){
+        try{
+            HashMap<String,List<Book>> booksByCategories = categoryService.getBooksByCategories();
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, booksByCategories);
         }catch(NotFoundException e){
             return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){
