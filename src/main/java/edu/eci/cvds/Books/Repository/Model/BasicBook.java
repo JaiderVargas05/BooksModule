@@ -6,4 +6,6 @@ public interface BasicBook {
     String getAuthor();
     String getIsbn();
     String getRecommendedAges();
+    String getImgPath();
+    String getDescription();
 }
