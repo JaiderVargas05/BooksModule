@@ -7,6 +7,7 @@ import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Repository.BookRepository;
+import edu.eci.cvds.Books.Repository.Model.BasicBook;
 import edu.eci.cvds.Books.Service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -80,10 +81,10 @@ public class ImpSubcategoryService implements SubcategoryService {
         }
     }
     @Override
-    public List<Book> getBooks(String idSubcategory){
+    public List<?> getBooks(String idSubcategory){
         Subcategory subcategory = (Subcategory) this.subcategoryRepository.BFindById(idSubcategory);
         if(subcategory==null) throw new NotFoundException(idSubcategory);
-        List<Book> books = ((BookRepository)this.bookRepository).findBySubcategories(subcategory);
+        List<BasicBook> books = ((BookRepository)this.bookRepository).findBySubcategories(subcategory);
         if(books.isEmpty()) throw new NotFoundException("Books");
         return books;
     }

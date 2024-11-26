@@ -71,17 +71,22 @@ public class ImpCopyService implements CopyService {
         }
     }
     @Override
-    public String createCopyByIsbn(String isbn,Copy copy){
+    public String createCopyByIsbn(CopyRequest copyRequest){
         try{
-            if (copy == null){
-                throw new NotNullException("Copy", "null");
-            } if(copy.getState() == null){
-                throw new BadStateException("Copy", copy.getId());
+
+            if (copyRequest.getIsbn() == null){
+                throw new NotNullException("isbn", "null");
             }
-            Book book = (Book) ((BookRepository)bookRepository).findByIsbn(isbn);
+
+            if(copyRequest.getState() == null){
+                throw new BadStateException("state", "null");
+            }
+            Book book = (Book) ((BookRepository)bookRepository).findByIsbn(copyRequest.getIsbn());
+
             if (book == null){
-                throw new NotFoundException("Copy", isbn);
+                throw new NotFoundException("Copy", copyRequest.getIsbn());
             }
+            Copy copy = new Copy(book,copyRequest.getState(),copyRequest.getUbication());
             copy.setBook(book);
             copyRepository.BSave(copy);
             String barcode = codeGenerator.generateCode(copy.getId());
@@ -90,9 +95,9 @@ public class ImpCopyService implements CopyService {
 
             return copy.getId();
         } catch (IllegalArgumentException ex){
-            throw new BadStateException("Copy", copy.getId());
+            throw new BadStateException("Copy", copyRequest.getIsbn());
         } catch (TransientObjectException | GenerateCodeException ex){
-            throw new BadObjectException("Copy", isbn);
+            throw new BadObjectException("Copy", copyRequest.getIsbn());
         }
     }
 
@@ -212,11 +217,14 @@ public class ImpCopyService implements CopyService {
                 }
 
                 try{
-                    Book book = ((BookRepository)bookRepository).findByIsbn(copyRequest.getIsbn());
-                    Copy copy = new Copy(book,copyRequest.getState(),copyRequest.getUbication());
-                    String copyId = this.createCopyByIsbn(copyRequest.getIsbn(),copy);
+                    String copyId = this.createCopyByIsbn(copyRequest);
                 } catch (Exception e) {
-                    jsonList.add(objectMapper.createObjectNode());
+                    ObjectNode errorNode = objectMapper.createObjectNode();
+                    errorNode.put("error", e.getMessage());
+                    errorNode.put("isbn", copyRequest.getIsbn());
+                    errorNode.put("state", copyRequest.getState());
+                    errorNode.put("ubication", copyRequest.getUbication());
+                    jsonList.add(errorNode);
                 }
 
             }

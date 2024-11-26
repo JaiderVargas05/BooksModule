@@ -1,6 +1,7 @@
 package edu.eci.cvds.Books.Service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.eci.cvds.Books.Controller.RequestModel.BookRequest;
 import edu.eci.cvds.Books.Controller.RequestModel.CopyRequest;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Copy;
@@ -22,5 +23,5 @@ public interface CopyService {
 
     List<ObjectNode> saveCopies(MultipartFile file);
 
-    String createCopyByIsbn(String isbn,Copy copy);
+    String createCopyByIsbn(CopyRequest copyRequest);
 }

@@ -12,7 +12,7 @@ public interface CategoryService {
     public Category getCategory(String idCategory);
     public List<?> getCategories();
     public void updateCategory(Category category);
-    public List<Book> getBooks(String idCategory);
+    public List<?> getBooks(String idCategory);
 
 
 }
