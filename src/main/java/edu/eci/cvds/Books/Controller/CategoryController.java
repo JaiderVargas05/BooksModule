@@ -8,6 +8,7 @@ import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
+import edu.eci.cvds.Books.Repository.Model.BasicBook;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,10 +40,11 @@ public class CategoryController {
                     categoryRequest.isActive());
 
             String id = categoryService.createCategory(category);
-            //return  new ResponseEntity<>(HttpStatus.OK);
             return new CategoryResponse(HttpStatus.OK,CategoryResponse.SUCCESS_CATEGORY_SAVED,id);
         }catch (BadRequestException e){
             return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
+        }catch (DuplicateObjectException e){
+            return new CategoryResponse(HttpStatus.CONFLICT, e.getMessage(),Collections.emptyList());
         } catch (InternalServerErrorException e){
             return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
         }
@@ -133,7 +135,7 @@ public class CategoryController {
     @GetMapping("/getBooksByCategories")
     public CategoryResponse getBooksByCategories(){
         try{
-            HashMap<String,List<Book>> booksByCategories = categoryService.getBooksByCategories();
+            HashMap<String, List<BasicBook>> booksByCategories = categoryService.getBooksByCategories();
             return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, booksByCategories);
         }catch(NotFoundException e){
             return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());

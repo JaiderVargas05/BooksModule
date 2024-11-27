@@ -38,4 +38,6 @@ public interface CategoryRepository extends BRepository, JpaRepository<Category,
     public default List<?> BFindAllById(List<String> Ids){
         return findAllById(Ids);
     }
+
+    public Category findByDescription(String description);
 }
