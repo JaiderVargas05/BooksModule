@@ -11,6 +11,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String categoryId;
+    @Column(unique = true)
     private String description;
     private boolean active=true;
 

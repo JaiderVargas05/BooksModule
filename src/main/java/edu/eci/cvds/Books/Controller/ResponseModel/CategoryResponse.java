@@ -30,7 +30,9 @@ public class CategoryResponse extends Response{
         super(status, message, id);
     }
 
-    public CategoryResponse(HttpStatus status, String message, HashMap<String,List<Book>> categories) {
+    public CategoryResponse(HttpStatus status, String message, HashMap<String,?> categories) {
         super(status, message, categories);
     }
+
+
 }
