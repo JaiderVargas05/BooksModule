@@ -1,22 +1,29 @@
 package edu.eci.cvds.Books.Service.Implementations;
 
 
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
+import edu.eci.cvds.Books.Repository.BookRepository;
+import edu.eci.cvds.Books.Repository.CategoryRepository;
+import edu.eci.cvds.Books.Repository.Model.BasicBook;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 @Service("ImpCat")
 public class ImpCategoryService implements CategoryService {
     private final BRepository categoryRepository;
+    private final BRepository bookRepository;
     @Autowired
-    public ImpCategoryService(@Qualifier("CatRepo") BRepository categoryRepository){
+    public ImpCategoryService(@Qualifier("CatRepo") BRepository categoryRepository,@Qualifier("BookRepo") BRepository bookRepository){
         this.categoryRepository=categoryRepository;
+        this.bookRepository=bookRepository;
     }
     @Override
     public String createCategory(Category category) {
@@ -25,6 +32,10 @@ public class ImpCategoryService implements CategoryService {
         }
         if(category.getDescription() == null){
             throw new BadObjectException("Category", "null description");
+        }
+
+        if(((CategoryRepository)categoryRepository).findByDescription(category.getDescription())!=null){
+            throw new DuplicateObjectException("Category",category.getDescription());
         }
         this.categoryRepository.BSave(category);
         return category.getCategoryId();
@@ -58,12 +69,6 @@ public class ImpCategoryService implements CategoryService {
     }
 
     @Override
-    public List<String> getSubcategories(String categoryId) {
-        Category category = this.getCategory(categoryId);
-        return category.getSubcategories();
-    }
-
-    @Override
     public void updateCategory(Category category) {
         try {
             Category oldCategory = (Category)categoryRepository.BFindById(category.getCategoryId());
@@ -79,4 +84,13 @@ public class ImpCategoryService implements CategoryService {
             throw new BadValuesException("Invalid values for Category with ID", category.getCategoryId());
         }
     }
+    @Override
+    public List<?> getBooks(String idCategory){
+        Category category = (Category) this.categoryRepository.BFindById(idCategory);
+        if(category==null) throw new NotFoundException(idCategory);
+        List<BasicBook> books = ((BookRepository)this.bookRepository).findByCategories(category);
+        if(books.isEmpty()) throw new NotFoundException("Books");
+        return books;
+    }
 }
+    

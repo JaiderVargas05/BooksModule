@@ -3,6 +3,7 @@ package edu.eci.cvds.Books.Controller;
 
 import edu.eci.cvds.Books.Controller.RequestModel.SubcategoryRequest;
 import edu.eci.cvds.Books.Controller.ResponseModel.SubcategoryResponse;
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Service.SubcategoryService;
@@ -28,13 +29,13 @@ public class SubcategoryController {
     @PostMapping("/createSubcategory")
     public SubcategoryResponse createSubcategory(@RequestParam String categoryId, @RequestBody SubcategoryRequest subcategoryRequest){
         try{
-            Subcategory subcategory = new Subcategory(subcategoryRequest.getBook(),
+            Subcategory subcategory = new Subcategory(
                     subcategoryRequest.getSubcategoryId(),
                     subcategoryRequest.getCategory(),
                     subcategoryRequest.getDescription(),
                     subcategoryRequest.isActive()
             );
-            String id = subcategoryService.createSubcategory(categoryId,subcategory);
+            String id = subcategoryService.createSubcategory(subcategory);
             return new SubcategoryResponse(HttpStatus.OK,SubcategoryResponse.SUCCESS_SUBCATEGORY_SAVED,id);
         }catch (BadRequestException e){
             return new SubcategoryResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
@@ -60,7 +61,7 @@ public class SubcategoryController {
     @PatchMapping ("/updateSubcategory")
     public SubcategoryResponse updateSubcategory(@RequestBody SubcategoryRequest subcategoryRequest){
         try{
-            Subcategory subcategory = new Subcategory(subcategoryRequest.getBook(),
+            Subcategory subcategory = new Subcategory(
                     subcategoryRequest.getSubcategoryId(),
                     subcategoryRequest.getCategory(),
                     subcategoryRequest.getDescription(),
@@ -83,6 +84,36 @@ public class SubcategoryController {
         try{
             Subcategory subcategory = subcategoryService.getSubcategory(id);
             return new SubcategoryResponse(HttpStatus.OK,SubcategoryResponse.SUCCESS_SUBCATEGORY_RETRIEVED,subcategory);
+        }catch(NotFoundException e){
+            return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
+        }catch (BadRequestException e){
+            return new SubcategoryResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new SubcategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
+
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getSubcategories")
+    public SubcategoryResponse getSubcategories(){
+        try{
+            List<?> subcategories = subcategoryService.getSubcategories();
+            return new SubcategoryResponse(HttpStatus.OK,SubcategoryResponse.SUCCESS_SUBCATEGORY_RETRIEVED,subcategories);
+        }catch(NotFoundException e){
+            return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
+        }catch (BadRequestException e){
+            return new SubcategoryResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new SubcategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
+
+        }
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getBooks")
+    public SubcategoryResponse getBooks(@RequestParam String idSubcategory){
+        try{
+            List<?> books = subcategoryService.getBooks(idSubcategory);
+            return new SubcategoryResponse(HttpStatus.OK,SubcategoryResponse.SUCCESS,books);
         }catch(NotFoundException e){
             return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
         }catch (BadRequestException e){

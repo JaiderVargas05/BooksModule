@@ -1,5 +1,21 @@
 package edu.eci.cvds.Books.Controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.eci.cvds.Books.Controller.ResponseModel.BookResponse;
 import edu.eci.cvds.Books.Controller.ResponseModel.CopyResponse;
 import edu.eci.cvds.Books.Controller.ResponseModel.Response;
@@ -17,9 +33,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/BookModule")
@@ -62,10 +82,10 @@ public class BookController {
 
     @CrossOrigin(origins = "*")
     @PatchMapping ("/updateBook")
-    public BookResponse updateBook(@RequestBody Book book){
+    public BookResponse updateBook(@RequestBody BookRequest bookRequest){
         try{
-            bookService.updateBook(book);
-            return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_UPDATED,book);
+            bookService.updateBook(bookRequest);
+            return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_UPDATED,bookRequest.getBookId());
         }catch(NotFoundException e){
             return new BookResponse(HttpStatus.NOT_FOUND, e.getMessage(), Collections.emptyList());
         } catch (BadRequestException e){
@@ -147,6 +167,21 @@ public class BookController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerErrorException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+    @CrossOrigin("*")
+    @PostMapping("/saveBooks")
+    public BookResponse saveBooks(@RequestParam("file") MultipartFile file) {
+        try{
+            List<ObjectNode> badBooks = bookService.saveBooks(file);
+            return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_SAVED,badBooks);
+
+        }catch (BadRequestException e){
+            return new BookResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new BookResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
         }
     }
 }

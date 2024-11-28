@@ -1,7 +1,9 @@
 package edu.eci.cvds.Books.Controller;
 
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.eci.cvds.Books.Controller.RequestModel.CopyRequest;
+import edu.eci.cvds.Books.Controller.ResponseModel.BookResponse;
 import edu.eci.cvds.Books.Controller.ResponseModel.CopyResponse;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Exception.BadRequestException;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -99,16 +102,10 @@ public class CopyController {
     @PatchMapping ("/update")
     public CopyResponse updateCopy(@RequestBody CopyRequest copyRequest){
         try{
-            Copy copy = new Copy(copyRequest.getId(),
-                    copyRequest.getBook(),
-                    copyRequest.getState(),
-                    copyRequest.getBarCode(),
-                    copyRequest.getDisponibility(),
-                    copyRequest.isActive()
-            );
 
-            copyService.updateCopies(copy);
-            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_UPDATED, copy);
+
+            copyService.updateCopies(copyRequest);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_UPDATED, copyRequest.getId() );
 
         }catch(NotFoundException e){
             return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
@@ -131,6 +128,19 @@ public class CopyController {
             return new CopyResponse(HttpStatus.BAD_REQUEST,e.getMessage(), Collections.emptyList());
         } catch (InternalServerErrorException e){
             return new CopyResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(), Collections.emptyList());
+        }
+    }
+
+    @CrossOrigin("*")
+    @PostMapping("/saveCopies")
+    public BookResponse saveCopies(@RequestParam("file") MultipartFile file) {
+        try{
+            List<ObjectNode> badCopies = copyService.saveCopies(file);
+            return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_SAVED,badCopies);
+        }catch (BadRequestException e){
+            return new BookResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new BookResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
         }
     }
 

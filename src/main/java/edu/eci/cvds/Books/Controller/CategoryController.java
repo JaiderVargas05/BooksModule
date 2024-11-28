@@ -4,9 +4,11 @@ package edu.eci.cvds.Books.Controller;
 import edu.eci.cvds.Books.Controller.RequestModel.CategoryRequest;
 import edu.eci.cvds.Books.Controller.ResponseModel.CategoryResponse;
 import edu.eci.cvds.Books.Controller.ResponseModel.SubcategoryResponse;
+import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
+import edu.eci.cvds.Books.Repository.Model.BasicBook;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -34,15 +37,14 @@ public class CategoryController {
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
-                    categoryRequest.getBooks(),
-                    categoryRequest.getSubcategories(),
                     categoryRequest.isActive());
 
             String id = categoryService.createCategory(category);
-            //return  new ResponseEntity<>(HttpStatus.OK);
             return new CategoryResponse(HttpStatus.OK,CategoryResponse.SUCCESS_CATEGORY_SAVED,id);
         }catch (BadRequestException e){
             return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
+        }catch (DuplicateObjectException e){
+            return new CategoryResponse(HttpStatus.CONFLICT, e.getMessage(),Collections.emptyList());
         } catch (InternalServerErrorException e){
             return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
         }
@@ -68,8 +70,6 @@ public class CategoryController {
         try{
             Category category = new Category(categoryRequest.getCategoryId(),
                     categoryRequest.getDescription(),
-                    categoryRequest.getBooks(),
-                    categoryRequest.getSubcategories(),
                     categoryRequest.isActive()
             );
             categoryService.updateCategory(category);
@@ -99,21 +99,6 @@ public class CategoryController {
         }
     }
 
-    @CrossOrigin(origins = "*")
-    @GetMapping("/getSubcategories")
-    public SubcategoryResponse getSubcategories(@RequestParam String id){
-        try{
-            List<?> subcategories = categoryService.getSubcategories(id);
-            return new SubcategoryResponse(HttpStatus.OK, SubcategoryResponse.SUCCESS_SUBCATEGORY_RETRIEVED, (List<Subcategory>) subcategories);
-        }catch(NotFoundException e){
-            return new SubcategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
-        }catch (BadRequestException e){
-            return new SubcategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
-        } catch (InternalServerErrorException e){
-            return new SubcategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
-
-        }
-    }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getCategories")
@@ -130,4 +115,21 @@ public class CategoryController {
 
         }
     }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getBooks")
+    public CategoryResponse getBooks(@RequestParam String idCategory){
+        try{
+            List<?> books = categoryService.getBooks(idCategory);
+            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, (List<?>) books);
+        }catch(NotFoundException e){
+            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
+        }catch (BadRequestException e){
+            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
+        } catch (InternalServerErrorException e){
+            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
+
+        }
+    }
+
+
 }

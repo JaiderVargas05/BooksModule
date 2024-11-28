@@ -10,21 +10,29 @@ public class Copy {
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
-    @Enumerated(EnumType.STRING)
-    private CopyState state;
+    //@Enumerated(EnumType.STRING)
+    private String state;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String barCode;
+    private String ubication;
     @Enumerated(EnumType.STRING)
     private CopyDispo disponibility = CopyDispo.AVAILABLE;
     private boolean active = true;
 
     public Copy(Book book, String state) {
-        this.state = CopyState.valueOf(state.toUpperCase());
+        this.state = state;
         this.book = book;
+    }
+    public Copy(Book book, String state, String ubication) {
+        this.state = state;
+        this.book = book;
+        this.ubication = ubication;
     }
     public Copy() {
     }
 
-    public Copy(String id, Book book, CopyState state, String barCode, CopyDispo disponibility, boolean active) {
+    public Copy(String id, Book book, String state, String barCode, CopyDispo disponibility, boolean active) {
         this.id = id;
         this.book = book;
         this.state = state;
@@ -45,10 +53,10 @@ public class Copy {
     public void setBook(Book book) {
         this.book = book;
     }
-    public CopyState getState() {
+    public String getState() {
         return state;
     }
-    public void setState(CopyState state) {
+    public void setState(String state) {
         this.state = state;
     }
     public String getBarCode() {
@@ -70,4 +78,11 @@ public class Copy {
         this.active = active;
     }
 
+    public String getUbication() {
+        return ubication;
+    }
+
+    public void setUbication(String ubication) {
+        this.ubication = ubication;
+    }
 }
