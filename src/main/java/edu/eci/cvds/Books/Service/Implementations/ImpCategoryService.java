@@ -92,15 +92,4 @@ public class ImpCategoryService implements CategoryService {
         if(books.isEmpty()) throw new NotFoundException("Books");
         return books;
     }
-    @Override
-    public HashMap<String,List<BasicBook>> getBooksByCategories(){
-        HashMap<String,List<BasicBook>> booksByCategory = new HashMap<>();
-        List<Category> categories = (List<Category>) this.categoryRepository.BFindAll();
-        if(categories.isEmpty()) throw new NotFoundException("Books");
-        for(Category category: categories) {
-            List<BasicBook> books = ((BookRepository) this.bookRepository).findByCategories(category);
-            booksByCategory.put(category.getDescription(), books);
-        }
-        return booksByCategory;
-    }
-}
+    
