@@ -93,6 +93,9 @@ public class ImpBookService implements BookService {
         if (book == null){
             throw new NotFoundException("Book", id);
         }
+        if(!book.isActive()){
+            throw new BadRequestException("Book", id);
+        }
         return book;
     }
     @Override
@@ -120,7 +123,15 @@ public class ImpBookService implements BookService {
 
     @Override
     public List<?> getAllBooks() {
-        return this.bookRepository.BFindAll();
+        List<Book> books = (List<Book>) bookRepository.BFindAll();
+        List<Book> activeBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.isActive()) {
+                activeBooks.add(book);
+            }
+        }
+        return activeBooks;
+
     }
 
     @Override
@@ -151,8 +162,13 @@ public class ImpBookService implements BookService {
     }
     @Override
     public List<Copy> getCopies(String bookId){
+        if(bookId ==null || bookId.isEmpty()){
+            throw new BadRequestException("Book",bookId);
+        }
         Book book = this.getBook(bookId);
-        if(book!=null)return book.getCopies();
+        if(book!=null && book.isActive()) {
+            return book.getCopies();
+        }
         throw new NotFoundException("Book", bookId);
     }
     @Override
@@ -166,7 +182,16 @@ public class ImpBookService implements BookService {
         if (books.isEmpty()){
             throw new NotFoundException("Book", author);
         }
-        return books;
+        List<Book> activeBooks = new ArrayList<>();
+        for (Book bookItem : books) {
+            if (bookItem.isActive()) {
+                activeBooks.add(bookItem);
+            }
+        }
+        if (activeBooks.isEmpty()) {
+            throw new BadRequestException("Books by Author", bookId);
+        }
+        return activeBooks;
     }
     @Override
     public List<ObjectNode> saveBooks(MultipartFile file){

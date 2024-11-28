@@ -93,9 +93,9 @@ public class ImpCategoryService implements CategoryService {
         List<Category> categories = (List<Category>) this.categoryRepository.BFindAll();
         if(categories.isEmpty()) throw new NotFoundException("Books");
         for(Category category: categories) {
-            List<Book> books = ((BookRepository) this.bookRepository).findByCategories(category);
+            List<?> books = ((BookRepository) this.bookRepository).findByCategories(category);
             booksByCategory.put(category.getDescription(), books);
         }
-        return booksByCategory;
+        return null;
     }
 }
