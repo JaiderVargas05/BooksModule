@@ -46,26 +46,39 @@ public class ImpBookService implements BookService {
             if (oldBook == null) {
                 throw new NotFoundException("Book", bookRequest.getBookId());
             }
-            if (bookRequest.getIsbn() == null || bookRequest.getTitle() == null || bookRequest.getAuthor() == null) {
-                throw new NotNullException("Book", "Required fields are missing");
-            }
-            if(bookRequest.getIsbn() == oldBook.getIsbn()){
+//            if (bookRequest.getIsbn() == null || bookRequest.getTitle() == null || bookRequest.getAuthor() == null) {
+//                throw new NotNullException("Book", "Required fields are missing");
+//            }
+            if(bookRequest.getIsbn()!=null && bookRequest.getIsbn() != oldBook.getIsbn()){
                 throw new BadRequestException("Book", bookRequest.getBookId());
             }
-            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
-                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),bookRequest.getCollection(),
-                    bookRequest.getRecommendedAges(), bookRequest.getLanguage());
-            List<Category> categories = (List<Category>) categoryRepository.BFindAllById(bookRequest.getCategoryIds());
-            if (categories.isEmpty()) {
-                throw new NotFoundException("Categories", "none found for provided IDs");
+//            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
+//                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),bookRequest.getCollection(),
+//                    bookRequest.getRecommendedAges(), bookRequest.getLanguage());
+            if(bookRequest.getCategoryIds()!=null){
+                List<Category> categories = (List<Category>) categoryRepository.BFindAllById(bookRequest.getCategoryIds());
+                if (categories.isEmpty()) {
+                    throw new NotFoundException("Categories", "none found for provided IDs");
+                }
+                oldBook.setCategories(categories);
             }
-            book.setCategories(categories);
-            List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(bookRequest.getSubcategoryIds());
-            if (subcategories.isEmpty()) {
-                throw new NotFoundException("Subcategories", "none found for provided IDs");
+            if(bookRequest.getSubcategoryIds()!=null){
+
+                List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(bookRequest.getSubcategoryIds());
+                if (subcategories.isEmpty()) {
+                    throw new NotFoundException("Subcategories", "none found for provided IDs");
+                }
+                oldBook.setSubcategories(subcategories);
             }
-            book.setSubcategories(subcategories);
-            (bookRepository).BUpdate(book);
+            if(bookRequest.getTitle()!=null)oldBook.setTitle(bookRequest.getTitle());
+            if(bookRequest.getAuthor()!=null)oldBook.setAuthor(bookRequest.getAuthor());
+            if(bookRequest.getEditorial()!=null)oldBook.setAuthor(bookRequest.getEditorial());
+            if(bookRequest.getLanguage()!=null)oldBook.setLanguage(bookRequest.getLanguage());
+            if(bookRequest.getDescription()!=null)oldBook.setDescription(bookRequest.getDescription());
+            if(bookRequest.getEdition()!=null)oldBook.setEdition(bookRequest.getEdition());
+            if(bookRequest.getRecommendedAges()!=null)oldBook.setRecommendedAges(bookRequest.getRecommendedAges());
+            if(bookRequest.getCollection()!=null)oldBook.setCollection(bookRequest.getCollection());
+            (bookRepository).BUpdate(oldBook);
             return true;
         } catch (IllegalArgumentException ex){
             throw new BadValuesException("Invalid values for Book with ID " + bookRequest.getBookId());
