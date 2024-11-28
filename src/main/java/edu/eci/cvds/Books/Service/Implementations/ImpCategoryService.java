@@ -7,6 +7,7 @@ import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.*;
 import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Repository.BookRepository;
+import edu.eci.cvds.Books.Repository.CategoryRepository;
 import edu.eci.cvds.Books.Repository.Model.BasicBook;
 import edu.eci.cvds.Books.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,10 @@ public class ImpCategoryService implements CategoryService {
         }
         if(category.getDescription() == null){
             throw new BadObjectException("Category", "null description");
+        }
+
+        if(((CategoryRepository)categoryRepository).findByDescription(category.getDescription())!=null){
+            throw new DuplicateObjectException("Category",category.getDescription());
         }
         this.categoryRepository.BSave(category);
         return category.getCategoryId();
@@ -87,15 +92,4 @@ public class ImpCategoryService implements CategoryService {
         if(books.isEmpty()) throw new NotFoundException("Books");
         return books;
     }
-    @Override
-    public HashMap<String,List<Book>> getBooksByCategories(){
-        HashMap<String,List<Book>> booksByCategory = new HashMap<>();
-        List<Category> categories = (List<Category>) this.categoryRepository.BFindAll();
-        if(categories.isEmpty()) throw new NotFoundException("Books");
-        for(Category category: categories) {
-            List<?> books = ((BookRepository) this.bookRepository).findByCategories(category);
-            booksByCategory.put(category.getDescription(), books);
-        }
-        return null;
-    }
-}
+    
