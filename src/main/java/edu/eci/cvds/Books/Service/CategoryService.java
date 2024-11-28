@@ -15,7 +15,7 @@ public interface CategoryService {
     public List<?> getCategories();
     public void updateCategory(Category category);
     public List<?> getBooks(String idCategory);
-    public HashMap<String,List<BasicBook>> getBooksByCategories();
+
 
 
 

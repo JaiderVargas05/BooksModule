@@ -131,19 +131,5 @@ public class CategoryController {
         }
     }
 
-    @CrossOrigin(origins = "*")
-    @GetMapping("/getBooksByCategories")
-    public CategoryResponse getBooksByCategories(){
-        try{
-            HashMap<String, List<BasicBook>> booksByCategories = categoryService.getBooksByCategories();
-            return new CategoryResponse(HttpStatus.OK, CategoryResponse.SUCCESS, booksByCategories);
-        }catch(NotFoundException e){
-            return new CategoryResponse(HttpStatus.NOT_FOUND,e.getMessage(),Collections.emptyList());
-        }catch (BadRequestException e){
-            return new CategoryResponse(HttpStatus.BAD_REQUEST, e.getMessage(), Collections.emptyList());
-        } catch (InternalServerErrorException e){
-            return new CategoryResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),  Collections.emptyList());
 
-        }
-    }
 }

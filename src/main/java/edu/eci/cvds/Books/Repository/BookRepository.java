@@ -4,6 +4,7 @@ import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Repository.Model.BasicBook;
+import edu.eci.cvds.Books.Repository.Model.SearchBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -35,8 +36,8 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
         return findById(id).orElse(null);
     }
     @Override
-    @Query("SELECT b FROM Book b")
-    List<BasicBook> BFindAll();
+    @Query("SELECT b FROM Book b  WHERE b.active=true")
+    List<SearchBook> BFindAll();
     @Override
     public default List<?> BFindAllById(List<String> Ids){
         return findAllById(Ids);

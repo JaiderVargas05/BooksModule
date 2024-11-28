@@ -123,15 +123,8 @@ public class ImpBookService implements BookService {
 
     @Override
     public List<?> getAllBooks() {
-        List<Book> books = (List<Book>) bookRepository.BFindAll();
-        List<Book> activeBooks = new ArrayList<>();
-        for (Book book : books) {
-            if (book.isActive()) {
-                activeBooks.add(book);
-            }
-        }
-        return activeBooks;
-
+        List<?> books = bookRepository.BFindAll();
+        return books;
     }
 
     @Override

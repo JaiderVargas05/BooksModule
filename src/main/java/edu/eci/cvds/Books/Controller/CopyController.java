@@ -102,16 +102,10 @@ public class CopyController {
     @PatchMapping ("/update")
     public CopyResponse updateCopy(@RequestBody CopyRequest copyRequest){
         try{
-            Copy copy = new Copy(copyRequest.getId(),
-                    copyRequest.getBook(),
-                    copyRequest.getState(),
-                    copyRequest.getBarCode(),
-                    copyRequest.getDisponibility(),
-                    copyRequest.isActive()
-            );
 
-            copyService.updateCopies(copy);
-            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_UPDATED, copy);
+
+            copyService.updateCopies(copyRequest);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_UPDATED, copyRequest.getId() );
 
         }catch(NotFoundException e){
             return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());

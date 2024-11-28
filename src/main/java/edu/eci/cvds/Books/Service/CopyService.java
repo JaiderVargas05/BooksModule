@@ -17,7 +17,7 @@ public interface CopyService {
     boolean deleteCopy(Copy copy);
     Copy getCopyById(String id) ;
     List<?> findAllCopies();
-    boolean updateCopies(Copy copy);
+    boolean updateCopies(CopyRequest copyRequest);
     List<Copy> findCopiesByBook(Book book);
     Copy findCopyByBarcode(String barcode);
 

@@ -131,23 +131,25 @@ public class ImpCopyService implements CopyService {
         return copyRepository.BFindAll();
     }
 
-    public boolean updateCopies(Copy e) {
+    public boolean updateCopies(CopyRequest e) {
         try {
             Copy oldCopy = (Copy)copyRepository.BFindById(e.getId());
             if (oldCopy == null) {
                 throw new NotFoundException("Copy", e.getId());
             } else {
-                if (e.getBook() == null || e.getState() == null || e.getDisponibility() == null || e.getBarCode() == null) {
-                    throw new BadObjectException("Copy", "Required fields are missing");
-                }
+//                if (e.getBook() == null || e.getState() == null || e.getDisponibility() == null || e.getBarCode() == null) {
+//                    throw new BadObjectException("Copy", "Required fields are missing");
+//                }
 //                if (e.getState() != CopyState.DAMAGED || e.getState() != CopyState.GOOD_CONDITION || e.getState() != CopyState.FAIR) {
 //                    throw new BadStateException("Copy", e.getState().name());
 //                }
-                if (e.getDisponibility() != CopyDispo.AVAILABLE || e.getDisponibility() != CopyDispo.BORROWED) {
+                if (e.getDisponibility() != CopyDispo.AVAILABLE && e.getDisponibility() != CopyDispo.BORROWED) {
                     throw new BadAvailabilityException("Copy",e.getDisponibility().name());
                 }
             }
-            copyRepository.BUpdate(e);
+            if(e.getDisponibility()!=null)oldCopy.setDisponibility(e.getDisponibility());
+            if(e.getState()!=null)oldCopy.setState(e.getState());
+            copyRepository.BUpdate(oldCopy);
             return true;
         } catch (IllegalArgumentException ex){
             throw new BadValuesException("Copy", e.getId());
