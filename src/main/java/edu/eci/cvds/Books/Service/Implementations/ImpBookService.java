@@ -49,7 +49,7 @@ public class ImpBookService implements BookService {
 //            if (bookRequest.getIsbn() == null || bookRequest.getTitle() == null || bookRequest.getAuthor() == null) {
 //                throw new NotNullException("Book", "Required fields are missing");
 //            }
-            if(bookRequest.getIsbn()!=null && bookRequest.getIsbn() != oldBook.getIsbn()){
+            if(bookRequest.getIsbn()!=null && !Objects.equals(bookRequest.getIsbn(), oldBook.getIsbn())){
                 throw new BadRequestException("Book", bookRequest.getBookId());
             }
 //            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
@@ -123,10 +123,11 @@ public class ImpBookService implements BookService {
             Files.createDirectories(filePath.getParent());
             Files.write(filePath, img.getBytes());
             Book book = this.getBook(bookId);
-            book.setImgPath("images/"+fileName);
             if(book==null){
                 throw new NotFoundException("Book",bookId);
             }
+            book.setImgPath("images/"+fileName);
+
             this.bookRepository.BSave(book);
             return "images/"+fileName;
         } catch (Exception e) {
@@ -145,6 +146,9 @@ public class ImpBookService implements BookService {
         Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
                 bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),bookRequest.getCollection(),
                 bookRequest.getRecommendedAges(), bookRequest.getLanguage());
+
+        if(book.getBookId()==null){book.setBookId(UUID.randomUUID().toString());}
+
         if (book == null){
             throw new NotNullException("Book","null");
         }
@@ -164,6 +168,7 @@ public class ImpBookService implements BookService {
         String imgPath = this.uploadImg(bookRequest.getImg(), book.getBookId());
         book.setImgPath(imgPath);
         bookRepository.BSave(book);
+
         return book.getBookId();
     }
     @Override
@@ -177,28 +182,7 @@ public class ImpBookService implements BookService {
         }
         throw new NotFoundException("Book", bookId);
     }
-    @Override
-    public List<Book> findByAuthor(HashMap<String,String> book) {
-        String bookId = book.get("bookId");
-        String author = book.get("author");
-        if (author == null || author == "" || bookId == null || bookId == "") {
-            throw new NotNullException("Author","null");
-        }
-        List<Book> books = ((BookRepository) bookRepository).findBookByAuthor(bookId,author);
-        if (books.isEmpty()){
-            throw new NotFoundException("Book", author);
-        }
-        List<Book> activeBooks = new ArrayList<>();
-        for (Book bookItem : books) {
-            if (bookItem.isActive()) {
-                activeBooks.add(bookItem);
-            }
-        }
-        if (activeBooks.isEmpty()) {
-            throw new BadRequestException("Books by Author", bookId);
-        }
-        return activeBooks;
-    }
+
     @Override
     public List<ObjectNode> saveBooks(MultipartFile file){
         List<ObjectNode> jsonList = new ArrayList<>();

@@ -155,22 +155,8 @@ public class BookController {
         }
     }
 
-    @CrossOrigin(origins = "*")
-    @PostMapping("/getBooksByAuthor")
-    public ResponseEntity<?> getBooksByAuthor(@RequestBody HashMap<String,String> bookInfo){
-        try{
-            List<Book> books = bookService.findByAuthor(bookInfo);
-            return new ResponseEntity<>(books, HttpStatus.OK);
-        }catch (NotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (NotNullException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerErrorException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
 
 
-    }
     @CrossOrigin("*")
     @PostMapping("/saveBooks")
     public BookResponse saveBooks(@RequestParam("file") MultipartFile file) {
