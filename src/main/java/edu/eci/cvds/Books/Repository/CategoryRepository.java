@@ -3,6 +3,7 @@ package edu.eci.cvds.Books.Repository;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public interface CategoryRepository extends BRepository, JpaRepository<Category,
     }
 
     @Override
+    @Query("SELECT c FROM category  c WHERE b.active=true")
     public default List<?> BFindAll(){
         return findAll();
     }
