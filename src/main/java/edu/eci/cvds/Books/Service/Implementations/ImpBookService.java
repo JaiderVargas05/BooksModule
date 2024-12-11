@@ -19,10 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -49,26 +46,26 @@ public class ImpBookService implements BookService {
 //            if (bookRequest.getIsbn() == null || bookRequest.getTitle() == null || bookRequest.getAuthor() == null) {
 //                throw new NotNullException("Book", "Required fields are missing");
 //            }
-            if(bookRequest.getIsbn()!=null && bookRequest.getIsbn() != oldBook.getIsbn()){
+            if(bookRequest.getIsbn() != null && !bookRequest.getIsbn().equals(oldBook.getIsbn())){
                 throw new BadRequestException("Book", bookRequest.getBookId());
             }
 //            Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
 //                    bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),bookRequest.getCollection(),
 //                    bookRequest.getRecommendedAges(), bookRequest.getLanguage());
-            if(bookRequest.getCategoryIds()!=null){
+            if(bookRequest.getCategoryIds()!=null && !bookRequest.getCategoryIds().isEmpty()){
                 List<Category> categories = (List<Category>) categoryRepository.BFindAllById(bookRequest.getCategoryIds());
                 if (categories.isEmpty()) {
                     throw new NotFoundException("Categories", "none found for provided IDs");
                 }
-                oldBook.setCategories(categories);
+                oldBook.setNewCategories(categories);
             }
-            if(bookRequest.getSubcategoryIds()!=null){
+            if(bookRequest.getSubcategoryIds()!=null && !bookRequest.getSubcategoryIds().isEmpty()){
 
                 List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(bookRequest.getSubcategoryIds());
                 if (subcategories.isEmpty()) {
                     throw new NotFoundException("Subcategories", "none found for provided IDs");
                 }
-                oldBook.setSubcategories(subcategories);
+                oldBook.setNewSubcategories(subcategories);
             }
             if(bookRequest.getTitle()!=null)oldBook.setTitle(bookRequest.getTitle());
             if(bookRequest.getAuthor()!=null)oldBook.setAuthor(bookRequest.getAuthor());
@@ -161,9 +158,11 @@ public class ImpBookService implements BookService {
         List<Subcategory> subcategories = (List<Subcategory>) subcategoryRepository.BFindAllById(bookRequest.getSubcategoryIds());
         book.setSubcategories(subcategories);
         bookRepository.BSave(book);
-        String imgPath = this.uploadImg(bookRequest.getImg(), book.getBookId());
-        book.setImgPath(imgPath);
-        bookRepository.BSave(book);
+        if (bookRequest.getImg() != null) {
+            String imgPath = this.uploadImg(bookRequest.getImg(), book.getBookId());
+            book.setImgPath(imgPath);
+            bookRepository.BSave(book);
+        }
         return book.getBookId();
     }
     @Override
