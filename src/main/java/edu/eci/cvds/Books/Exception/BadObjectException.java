@@ -5,7 +5,7 @@ public class BadObjectException extends RuntimeException{
         super(message);
     }
     public BadObjectException(String object, String id) {
-        super( object + " with  " + id + " is incomplete data.");
+        super( object + " with " + id + " is incomplete data.");
     }
 
 }
