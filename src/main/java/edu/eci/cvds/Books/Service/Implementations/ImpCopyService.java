@@ -101,13 +101,13 @@ public class ImpCopyService implements CopyService {
         }
     }
 
-    public boolean deleteCopy(Copy e) {
-        if (e == null){
+    public boolean deleteCopy(String idCopy) {
+        if (idCopy == null){
             throw new NotNullException("Copy", "null");
-        } if (copyRepository.BFindById(e.getId()) == null){
-            throw new NotFoundException("Copy", e.getId());
+        } if (copyRepository.BFindById(idCopy) == null){
+            throw new NotFoundException("Copy", idCopy);
         }
-        copyRepository.BDelete(e.getId());
+        copyRepository.BDelete(idCopy);
         return true;
     }
 

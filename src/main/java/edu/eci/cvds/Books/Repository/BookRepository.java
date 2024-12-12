@@ -45,9 +45,9 @@ public interface BookRepository extends BRepository,JpaRepository<Book,String>{
     @Query("SELECT b FROM Book b WHERE b.author = :author AND b.bookId != :bookId")
     List<Book> findBookByAuthor(String bookId, String author);
     Book findByIsbn(String isbn);
-    @Query("SELECT b FROM Book b WHERE :category MEMBER OF b.categories")
+    @Query("SELECT b FROM Book b WHERE :category MEMBER OF b.categories AND b.active=true")
     List<BasicBook> findByCategories(Category category);
-    @Query("SELECT b FROM Book b WHERE :subcategory MEMBER OF b.subcategories")
+    @Query("SELECT b FROM Book b WHERE :subcategory MEMBER OF b.subcategories AND b.active=true")
     List<BasicBook> findBySubcategories(Subcategory subcategory);
 
 }
