@@ -31,19 +31,9 @@ public class ExternalAuthenticationFilter  extends OncePerRequestFilter {
 
     private final String AUTH_API_URL = "https://cvds-project-cnb6c0cuddfyc9fe.mexicocentral-01.azurewebsites.net/validador/validar";
 
-    /**
-     * Método que filtra las solicitudes entrantes, validando el token de autorización
-     * con la API externa. Si el token es válido, se establece la autenticación en el
-     * contexto de seguridad de Spring.
-     *
-     * @param request La solicitud HTTP entrante.
-     * @param response La respuesta HTTP que se enviará al cliente.
-     * @throws IOException  ocurre un error durante el procesamiento de la solicitud o respuesta.
-     * @throws ServletException ocurre un error relacionado con el servlet.
-     */
     @Override
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
-        // Obtener el encabezado "Authorization" de la solicitud HTTP
+
 
         String authHeader = request.getHeader("Authorization");
 
@@ -56,9 +46,11 @@ public class ExternalAuthenticationFilter  extends OncePerRequestFilter {
 
         // Extraer el token del encabezado "Authorization" (después de "Bearer")
         String token = authHeader.substring(7);
+        String rol = request.getParameter("rol");
+        String nombreUsuario = request.getParameter("nombreUsuario");
 
         // Llama a la API externa para validar el token y obtener usuario y rol
-        JsonNode validationResponse = validateTokenWithExternalApi(token);
+        JsonNode validationResponse = validateTokenWithExternalApi(token,rol,nombreUsuario);
 
         // Si la respuesta es válida (el campo "valid" es verdadero), proceder con la autenticación
         if (validationResponse != null && validationResponse.get("valid").asBoolean()) {
@@ -87,25 +79,35 @@ public class ExternalAuthenticationFilter  extends OncePerRequestFilter {
      * @return Un objeto JsonNode que contiene la respuesta de la API externa. Si el token es válido,
      *         contiene un campo "valid" con valor true, junto con el nombre de usuario y el rol.
      */
-//    private JsonNode validateTokenWithExternalApi(String token) {
-//        try {
-//           // Establecer la conexión con la API externa usando la URL proporcionada
-//            HttpURLConnection connection = (HttpURLConnection) new URL(AUTH_API_URL).openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type", "application/json");
-//            connection.setDoOutput(true);
-//
-//            // Crea el cuerpo de la solicitud JSON
-//            String requestBody = String.format("{\"token\":\"%s\"}", token);
-//
-//            // Escribir el cuerpo de la solicitud en el OutputStream de la conexión
-//           try (OutputStream os = connection.getOutputStream()) {
-//               os.write(requestBody.getBytes(StandardCharsets.UTF_8));
-//            }
-//
-//           // Si la respuesta es 200 OK, leer la respuesta y convertirla a un objeto JsonNode
-//           int responseCode = connection.getResponseCode();
-//            if (responseCode == HttpServletResponse.SC_OK) {
+    private JsonNode validateTokenWithExternalApi(String token, String rol, String nombreUsuario) {
+        try {
+            // Establecer la conexión con la API externa usando la URL proporcionada
+            HttpURLConnection connection = (HttpURLConnection) new URL(AUTH_API_URL).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            // Crea el cuerpo de la solicitud JSON
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode requestBody = mapper.createObjectNode();
+            requestBody.put("token", token);
+            requestBody.put("rol", rol);
+            requestBody.put("nombreUsuario", nombreUsuario);
+
+            // Escribir el cuerpo de la solicitud en el OutputStream de la conexión
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(requestBody.toString().getBytes(StandardCharsets.UTF_8));
+            }
+
+            // Si la respuesta es 200 OK, leer la respuesta y convertirla a un objeto JsonNode
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpServletResponse.SC_OK) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode responseNode = objectMapper.createObjectNode();
+                responseNode.put("valid", true);
+                responseNode.put("username", nombreUsuario);
+                responseNode.put("role", rol);
+                return responseNode;
 //                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 //                    StringBuilder response = new StringBuilder();
 //                    String line;
@@ -113,34 +115,33 @@ public class ExternalAuthenticationFilter  extends OncePerRequestFilter {
 //                        response.append(line);
 //                    }
 //                    // Convertir la respuesta JSON a un objeto JsonNode utilizando ObjectMapper
-//                    ObjectMapper mapper = new ObjectMapper();
 //                    return mapper.readTree(response.toString());
-//                }
-//           } else {
-//                //token invalido
-//                return null;
-//            }
-//        } catch (Exception e) {
-//           e.printStackTrace();
-//            return null;
-//       }
-//    }
-
-
-// Simula la respuesta de la API externa
-    private ObjectNode validateTokenWithExternalApi(String token) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode responseNode = objectMapper.createObjectNode();
-
-            responseNode.put("valid", true);
-            responseNode.put("username", "user123");
-            responseNode.put("role", "admin");
-            return responseNode;
+               // }
+            } else {
+                //token invalido
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
+// Simula la respuesta de la API externa
+//    private ObjectNode validateTokenWithExternalApi(String token) {
+//        try {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            ObjectNode responseNode = objectMapper.createObjectNode();
+//
+//            responseNode.put("valid", true);
+//            responseNode.put("username", "user123");
+//            responseNode.put("role", "admin");
+//            return responseNode;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }
 
