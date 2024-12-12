@@ -27,7 +27,7 @@ public class SubcategoryController {
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/createSubcategory")
-    public SubcategoryResponse createSubcategory(@RequestParam String categoryId, @RequestBody SubcategoryRequest subcategoryRequest){
+    public SubcategoryResponse createSubcategory(@RequestBody SubcategoryRequest subcategoryRequest){
         try{
             Subcategory subcategory = new Subcategory(
                     subcategoryRequest.getSubcategoryId(),

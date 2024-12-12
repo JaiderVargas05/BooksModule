@@ -54,7 +54,7 @@ public class ImpCategoryService implements CategoryService {
     @Override
     public Category getCategory(String categoryId) {
         if (categoryId == null){
-            throw new NotNullException("Catgory ID", "null");
+            throw new NotNullException("Category ID", "null");
         }
         Category category = (Category)categoryRepository.BFindById(categoryId);
         if (category == null){
