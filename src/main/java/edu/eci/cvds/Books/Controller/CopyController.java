@@ -51,19 +51,10 @@ public class CopyController {
     }
     @CrossOrigin(origins = "*")
     @DeleteMapping("/delete")
-    public CopyResponse deleteCopy(@RequestBody CopyRequest copyRequest){
+    public CopyResponse deleteCopy(@RequestParam String idCopy){
         try{
-            Copy copy = new Copy(copyRequest.getId(),
-                    copyRequest.getBook(),
-                    copyRequest.getState(),
-                    copyRequest.getBarCode(),
-                    copyRequest.getDisponibility(),
-                    copyRequest.isActive()
-            );
-
-            copyService.deleteCopy(copy);
-
-            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_DELETED, copy);
+            copyService.deleteCopy(idCopy);
+            return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_DELETED, idCopy);
         }catch(NotFoundException e){
             return new CopyResponse(HttpStatus.NOT_FOUND,e.getMessage(), Collections.emptyList());
         }catch (BadRequestException e){
@@ -102,8 +93,6 @@ public class CopyController {
     @PatchMapping ("/update")
     public CopyResponse updateCopy(@RequestBody CopyRequest copyRequest){
         try{
-
-
             copyService.updateCopies(copyRequest);
             return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_UPDATED, copyRequest.getId() );
 

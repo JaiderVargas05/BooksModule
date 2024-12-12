@@ -5,6 +5,6 @@ public class BadValuesException extends RuntimeException{
         super(message);
     }
     public BadValuesException(String object, String id) {
-        super( object + " with ID " + id + " is not valid.");
+        super("Invalid values for " +  object + " with ID: " + id);
     }
 }

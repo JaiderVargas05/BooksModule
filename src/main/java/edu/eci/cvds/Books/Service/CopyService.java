@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public interface CopyService {
     String createCopy(String bookId, Copy copy);
-    boolean deleteCopy(Copy copy);
+    boolean deleteCopy(String idCopy);
     Copy getCopyById(String id) ;
     List<?> findAllCopies();
     boolean updateCopies(CopyRequest copyRequest);
