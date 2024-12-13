@@ -57,7 +57,7 @@ public class BookController {
         try{
             String id = bookService.saveBook(bookRequest);
             return new BookResponse(HttpStatus.OK,BookResponse.SUCCESS_BOOK_SAVED,id);
-        }catch (BadRequestException e){
+        }catch (BadObjectException e){
             return new BookResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
         } catch (InternalServerErrorException e){
             return new BookResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
