@@ -63,7 +63,7 @@ public class ImpCopyService implements CopyService {
             e.setBarCode(barcode);
             copyRepository.BSave(e);
 
-            return e.getId();
+            return e.getBarCode();
         } catch (IllegalArgumentException ex){
             throw new BadStateException("Copy", e.getId());
         } catch (TransientObjectException | GenerateCodeException ex){
