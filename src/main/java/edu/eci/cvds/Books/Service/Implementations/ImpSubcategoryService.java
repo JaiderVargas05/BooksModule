@@ -72,14 +72,15 @@ public class ImpSubcategoryService implements SubcategoryService {
                 throw new NotFoundException("Subcategory", subcategory.getSubcategoryId());
             } else {
                 if ( subcategory.getDescription() == null || subcategory.getDescription().isEmpty()) {
-                    throw new BadObjectException("Subcategory", subcategory.getDescription());
+                    throw new BadObjectException("Subcategory", "null or empty description");
                 }
             }
             (subcategoryRepository).BUpdate(subcategory);
         } catch (IllegalArgumentException ex){
-            throw new BadValuesException("Invalid values for Subcategory with ID",subcategory.getSubcategoryId());
+            throw new BadValuesException("Subcategory",subcategory.getSubcategoryId());
         }
     }
+
     @Override
     public List<?> getBooks(String idSubcategory){
         Subcategory subcategory = (Subcategory) this.subcategoryRepository.BFindById(idSubcategory);

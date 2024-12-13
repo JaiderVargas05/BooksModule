@@ -27,7 +27,7 @@ public interface CategoryRepository extends BRepository, JpaRepository<Category,
     }
 
     @Override
-    @Query("SELECT c FROM Category c  WHERE c.active=true")
+    @Query("SELECT c FROM category  c WHERE b.active=true")
     public default List<?> BFindAll(){
         return findAll();
     }

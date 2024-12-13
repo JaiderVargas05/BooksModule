@@ -31,6 +31,8 @@ public interface CopyRepository extends BRepository,JpaRepository<Copy, String> 
         return this.findById(id).orElse(null);
     }
     Copy findCopyByBarCode(String barCode);
+
+    @Query ("SELECT c FROM copy c WHERE c.active=true")
     default List<Copy> BFindAll(){
         return findAll();
     }

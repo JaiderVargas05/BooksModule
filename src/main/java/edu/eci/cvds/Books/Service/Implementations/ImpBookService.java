@@ -142,9 +142,12 @@ public class ImpBookService implements BookService {
         Book book = new Book(bookRequest.getIsbn(), bookRequest.getDescription(), bookRequest.getTitle(),
                 bookRequest.getAuthor(), bookRequest.getEditorial(), bookRequest.getEdition(),bookRequest.getCollection(),
                 bookRequest.getRecommendedAges(), bookRequest.getLanguage());
+
         if (book == null){
             throw new NotNullException("Book","null");
         }
+        if(book.getBookId()==null){book.setBookId(UUID.randomUUID().toString());}
+
         if(book.getIsbn() == null){
             throw new BadObjectException("Book", book.getIsbn());
         }
