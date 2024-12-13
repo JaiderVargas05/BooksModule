@@ -33,14 +33,11 @@ public class CopyController {
     @PostMapping("/createCopy")
     public CopyResponse createCopy(@RequestParam String bookId, @RequestBody CopyRequest copyRequest){
         try{
-            Copy copy = new Copy(copyRequest.getId(),
+            Copy copy = new Copy(
                     copyRequest.getBook(),
                     copyRequest.getState(),
-                    copyRequest.getBarCode(),
-                    copyRequest.getDisponibility(),
-                    copyRequest.isActive()
+                    copyRequest.getUbication()
             );
-
             String id = copyService.createCopy(bookId, copy);
             return new CopyResponse(HttpStatus.OK,CopyResponse.SUCCESS_COPY_SAVED,id);
         }catch (BadRequestException e){
