@@ -7,12 +7,9 @@ import edu.eci.cvds.Books.Controller.RequestModel.CopyRequest;
 import edu.eci.cvds.Books.Domain.Book;
 import edu.eci.cvds.Books.Domain.Copy;
 import edu.eci.cvds.Books.Domain.CopyDispo;
-import edu.eci.cvds.Books.Domain.CopyState;
 import edu.eci.cvds.Books.Exception.*;
-import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Repository.BookRepository;
 import edu.eci.cvds.Books.Repository.CopyRepository;
-import edu.eci.cvds.Books.Service.CopyService;
 import edu.eci.cvds.Books.Service.Implementations.ImpCopyService;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -86,11 +83,11 @@ class ImpCopyServiceTest {
         doNothing().when(copyRepository).BSave(any(Copy.class));
 
         // Act
-        String copyId = copyService.createCopy("book1", copy);
+        String barCode = copyService.createCopy("book1", copy);
 
         // Assert
-        assertEquals("1", copyId);
-        assertEquals("barcode123", copy.getBarCode());
+        assertEquals("barcode123", barCode);
+        assertEquals("1", copy.getId());
         verify(copyRepository, times(2)).BSave(any(Copy.class));
     }
 
