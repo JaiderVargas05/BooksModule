@@ -16,6 +16,7 @@ import edu.eci.cvds.Books.Repository.BRepository;
 import edu.eci.cvds.Books.Repository.BookRepository;
 import edu.eci.cvds.Books.Repository.CopyRepository;
 import edu.eci.cvds.Books.Service.CopyService;
+import jakarta.persistence.GenerationType;
 import org.apache.poi.ss.usermodel.*;
 import org.hibernate.TransientObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service("CopyImp")
 public class ImpCopyService implements CopyService {
@@ -87,6 +89,7 @@ public class ImpCopyService implements CopyService {
                 throw new NotFoundException("Copy", copyRequest.getIsbn());
             }
             Copy copy = new Copy(book,copyRequest.getState(),copyRequest.getUbication());
+            if(copy.getId()==null)copy.setId(UUID.randomUUID().toString());
             copy.setBook(book);
             copyRepository.BSave(copy);
             String barcode = codeGenerator.generateCode(copy.getId());
@@ -116,7 +119,7 @@ public class ImpCopyService implements CopyService {
             throw new NotNullException("Copy", "null");
         }
         if(!isValidIdFormat(id)) {
-            throw new BadFormatException("Copy ID", id);
+            throw new BadFormatException("Copy", id);
         }
         Copy copy = (Copy)copyRepository.BFindById(id);
         if (copy == null){
@@ -137,12 +140,9 @@ public class ImpCopyService implements CopyService {
             if (oldCopy == null) {
                 throw new NotFoundException("Copy", e.getId());
             } else {
-//                if (e.getBook() == null || e.getState() == null || e.getDisponibility() == null || e.getBarCode() == null) {
-//                    throw new BadObjectException("Copy", "Required fields are missing");
-//                }
-//                if (e.getState() != CopyState.DAMAGED || e.getState() != CopyState.GOOD_CONDITION || e.getState() != CopyState.FAIR) {
-//                    throw new BadStateException("Copy", e.getState().name());
-//                }
+                if (e.getDisponibility() == null) {
+                    throw new BadAvailabilityException("Copy", oldCopy.getId());
+                }
                 if (e.getDisponibility() != CopyDispo.AVAILABLE && e.getDisponibility() != CopyDispo.BORROWED) {
                     throw new BadAvailabilityException("Copy",e.getDisponibility().name());
                 }
@@ -162,7 +162,7 @@ public class ImpCopyService implements CopyService {
         }
         List<Copy> copies = ((CopyRepository) copyRepository).findCopyByBook(book);
         if(copies == null || copies.isEmpty()){
-            throw new NotFoundException("Copy","for book with ID"+book.getBookId());
+            throw new NotFoundException("Copy not found for book with ID: "+book.getBookId());
         }
         return copies;
     }
@@ -172,7 +172,7 @@ public class ImpCopyService implements CopyService {
         }
         Copy copy = ((CopyRepository) copyRepository).findCopyByBarCode(barcode);
         if (copy == null){
-            throw new NotFoundException("Copy","with barcode" +barcode);
+            throw new NotFoundException("Copy not found with barcode: " +barcode);
         }
         return copy;
     }

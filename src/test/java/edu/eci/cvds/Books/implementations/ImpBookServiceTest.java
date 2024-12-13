@@ -464,7 +464,7 @@ class ImpBookServiceTest {
         // Verificar resultados
         assertFalse(result.isEmpty());
         ObjectNode errorNode = result.get(0);
-        assertEquals("Book with  ISBN already exists: 1234567890 is incomplete data.", errorNode.get("error").asText());
+        assertEquals("Book with ISBN already exists: 1234567890 is incomplete data.", errorNode.get("error").asText());
 
         // Verificar que el libro no fue guardado
         verify(bookRepository, never()).save(any(Book.class));

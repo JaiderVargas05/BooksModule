@@ -185,6 +185,8 @@
 								<exclude>/edu/eci/cvds/Books/Domain/CopyState</exclude>
 								<exclude>/edu/eci/cvds/Books/Domain/CopyDispo</exclude>
 								<exclude>/edu/eci/cvds/Books/Controller/*</exclude>
+								<exclude>/edu/eci/cvds/Books/Security/**</exclude>
+								<exclude>/edu/eci/cvds/Books/Config/**</exclude>
 							</excludes>
 						</configuration>
 					</execution>

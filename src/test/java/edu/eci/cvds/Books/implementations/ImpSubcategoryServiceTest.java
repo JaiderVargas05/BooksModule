@@ -49,7 +49,7 @@ class ImpSubcategoryServiceTest {
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             subcategoryService.createSubcategory(subcategory);
         });
-        assertEquals("Subcategory with null is Null.", exception.getMessage());
+        assertEquals("Subcategory must not be null", exception.getMessage());
     }
 
     @Test
@@ -96,7 +96,7 @@ class ImpSubcategoryServiceTest {
             subcategoryService.deleteSubcategory(subcategoryId);
         });
 
-        assertEquals("Subcategory with null or empty is Null.", exception.getMessage());
+        assertEquals("Subcategory must not be null or empty", exception.getMessage());
     }
 
     @Test
@@ -110,7 +110,7 @@ class ImpSubcategoryServiceTest {
             subcategoryService.deleteSubcategory(subcategoryId);
         });
 
-        assertEquals("Subcategory with ID 12345 was not found.", exception.getMessage());
+        assertEquals("Subcategory with ID: 12345 was not found.", exception.getMessage());
     }
 
     @Test
@@ -141,7 +141,7 @@ class ImpSubcategoryServiceTest {
             subcategoryService.getSubcategory(subcategoryId);
         });
 
-        assertEquals("Subcategory ID with null is Null.", exception.getMessage());
+        assertEquals("Subcategory ID must not be null", exception.getMessage());
     }
 
     @Test
@@ -155,7 +155,7 @@ class ImpSubcategoryServiceTest {
             subcategoryService.getSubcategory(subcategoryId);
         });
 
-        assertEquals("Subcategory with ID 12345 was not found.", exception.getMessage());
+        assertEquals("Subcategory with ID: 12345 was not found.", exception.getMessage());
     }
 
     @Test
@@ -255,7 +255,7 @@ class ImpSubcategoryServiceTest {
             subcategoryService.updateSubcategory(subcategory);
         });
 
-        assertEquals("Subcategory with ID 1 was not found.", exception.getMessage());
+        assertEquals("Subcategory with ID: 1 was not found.", exception.getMessage());
         verify(subcategoryRepository, times(0)).BUpdate(any(Subcategory.class));
     }
 

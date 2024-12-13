@@ -179,28 +179,7 @@ public class ImpBookService implements BookService {
         }
         throw new NotFoundException("Book", bookId);
     }
-    @Override
-    public List<Book> findByAuthor(HashMap<String,String> book) {
-        String bookId = book.get("bookId");
-        String author = book.get("author");
-        if (author == null || author == "" || bookId == null || bookId == "") {
-            throw new NotNullException("Author","null");
-        }
-        List<Book> books = ((BookRepository) bookRepository).findBookByAuthor(bookId,author);
-        if (books.isEmpty()){
-            throw new NotFoundException("Book", author);
-        }
-        List<Book> activeBooks = new ArrayList<>();
-        for (Book bookItem : books) {
-            if (bookItem.isActive()) {
-                activeBooks.add(bookItem);
-            }
-        }
-        if (activeBooks.isEmpty()) {
-            throw new BadRequestException("Books by Author", bookId);
-        }
-        return activeBooks;
-    }
+
     @Override
     public List<ObjectNode> saveBooks(MultipartFile file){
         List<ObjectNode> jsonList = new ArrayList<>();

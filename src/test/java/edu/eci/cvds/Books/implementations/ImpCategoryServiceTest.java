@@ -44,7 +44,7 @@ class ImpCategoryServiceTest {
             categoryService.createCategory(null);
         });
 
-        assertEquals("Category with null is Null.", exception.getMessage());
+        assertEquals("Category must not be null", exception.getMessage());
     }
 
     @Test
@@ -95,7 +95,7 @@ class ImpCategoryServiceTest {
             categoryService.deleteCategory(null);
         });
 
-        assertEquals("Category ID with null is Null.", exception.getMessage());
+        assertEquals("Category ID must not be null", exception.getMessage());
     }
 
     @Test
@@ -104,7 +104,7 @@ class ImpCategoryServiceTest {
             categoryService.deleteCategory("");
         });
 
-        assertEquals("Category ID with null is Null.", exception.getMessage());
+        assertEquals("Category ID must not be null", exception.getMessage());
     }
 
     @Test
@@ -117,7 +117,7 @@ class ImpCategoryServiceTest {
             categoryService.deleteCategory(categoryId);
         });
 
-        assertEquals("Category with ID nonexistent-id was not found.", exception.getMessage());
+        assertEquals("Category with ID: nonexistent-id was not found.", exception.getMessage());
     }
 
     @Test
@@ -143,7 +143,7 @@ class ImpCategoryServiceTest {
             categoryService.getCategory(null);
         });
 
-        assertEquals("Catgory ID with null is Null.", exception.getMessage());
+        assertEquals("Category ID must not be null", exception.getMessage());
     }
 
     @Test
@@ -156,7 +156,7 @@ class ImpCategoryServiceTest {
             categoryService.getCategory(categoryId);
         });
 
-        assertEquals("Category with ID nonexistent-id was not found.", exception.getMessage());
+        assertEquals("Category with ID: nonexistent-id was not found.", exception.getMessage());
     }
 
     @Test
@@ -212,7 +212,7 @@ class ImpCategoryServiceTest {
             categoryService.updateCategory(category);
         });
 
-        assertEquals("Category with ID " + category.getCategoryId() + " was not found.", exception.getMessage());
+        assertEquals("Category with ID: " + category.getCategoryId() + " was not found.", exception.getMessage());
     }
 
     @Test
@@ -310,7 +310,7 @@ class ImpCategoryServiceTest {
             categoryService.getBooks(categoryId);
         });
 
-        assertEquals("Category with ID " + categoryId + " was not found.", exception.getMessage());
+        assertEquals("Category with ID: " + categoryId + " was not found.", exception.getMessage());
         verify(categoryRepository, times(1)).BFindById(categoryId);
         verify(bookRepository, never()).findByCategories(any(Category.class));
     }

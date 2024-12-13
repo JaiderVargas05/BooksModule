@@ -5,6 +5,6 @@ public class BadAvailabilityException extends RuntimeException{
         super(message);
     }
     public BadAvailabilityException(String object, String id) {
-        super( object + " with  " + id + " avaibility is not valid.");
+        super("Invalid availability for " + object  + " ID: " + id);
     }
 }

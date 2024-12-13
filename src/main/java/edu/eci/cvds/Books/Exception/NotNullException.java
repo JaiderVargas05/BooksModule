@@ -6,6 +6,6 @@ public class NotNullException  extends RuntimeException{
         super(message);
     }
     public NotNullException (String object, String id) {
-        super( object + " with " + id + " is Null.");
+        super( object + " must not be " + id);
     }
 }

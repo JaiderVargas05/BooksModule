@@ -5,7 +5,7 @@ public class BadStateException extends RuntimeException{
         super(message);
     }
     public BadStateException(String object, String id) {
-        super( object + " with  " + id + " contains invalid state.");
+        super( object + " with ID: " + id + " contains invalid state.");
     }
 
 }
