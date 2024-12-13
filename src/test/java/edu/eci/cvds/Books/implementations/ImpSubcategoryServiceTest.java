@@ -1,5 +1,8 @@
 package edu.eci.cvds.Books.implementations;
 
+import edu.eci.cvds.Books.Controller.RequestModel.SubcategoryRequest;
+import edu.eci.cvds.Books.Domain.Book;
+import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import edu.eci.cvds.Books.Exception.BadValuesException;
 import edu.eci.cvds.Books.Exception.NotFoundException;
@@ -31,21 +34,41 @@ class ImpSubcategoryServiceTest {
     private BookRepository bookRepository;
 
     @InjectMocks
-    private ImpSubcategoryService subcategoryService;  // El servicio que estamos probando
+    private ImpSubcategoryService subcategoryService;
+
+
+    private SubcategoryRequest subcategoryRequest;
+    private Book book;
+    private Category category;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);  // Inicializa los mocks antes de cada prueba
         subcategoryService = new ImpSubcategoryService(subcategoryRepository, bookRepository);
 
+        subcategoryRequest = new SubcategoryRequest();
+        subcategoryRequest.setSubcategoryId("1");
+        subcategoryRequest.setDescription("Test Description");
+        subcategoryRequest.setActive(true);
+
+        book = new Book();
+        book.setBookId("1");
+        book.setTitle("Sample Book");
+        subcategoryRequest.setBook(book);
+
+        category = new Category();
+        category.setCategoryId("1");
+        category.setDescription("Fiction");
+        subcategoryRequest.setCategory(category);
     }
+
+
 
     @Test
     void createSubcategory_whenSubcategoryIsNull_throwsNotNullException() {
-        // Arrange
+
         Subcategory subcategory = null;
 
-        // Act & Assert
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             subcategoryService.createSubcategory(subcategory);
         });
@@ -54,11 +77,10 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void createSubcategory_whenDescriptionIsNull_throwsBadObjectException() {
-        // Arrange
+
         Subcategory subcategory = new Subcategory();
         subcategory.setDescription(null);
 
-        // Act & Assert
         BadObjectException exception = assertThrows(BadObjectException.class, () -> {
             subcategoryService.createSubcategory(subcategory);
         });
@@ -66,11 +88,10 @@ class ImpSubcategoryServiceTest {
     }
     @Test
     void createSubcategory_whenValid_subcategoryIsCreated() {
-        // Arrange
+
         Subcategory subcategory = new Subcategory();
         subcategory.setDescription("Test Subcategory");
 
-        // Simulamos que al llamar a BSave, se asigna un ID
         doAnswer(invocation -> {
             Subcategory savedSubcategory = invocation.getArgument(0);  // Obtenemos el argumento pasado al método BSave
             savedSubcategory.setSubcategoryId("12345");  // Asignamos el ID simulado
@@ -88,10 +109,9 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void deleteSubcategory_whenIdIsNull_throwsNotNullException() {
-        // Arrange
+
         String subcategoryId = null;
 
-        // Act & Assert
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             subcategoryService.deleteSubcategory(subcategoryId);
         });
@@ -101,11 +121,10 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void deleteSubcategory_whenSubcategoryNotFound_throwsNotFoundException() {
-        // Arrange
+
         String subcategoryId = "12345";
         when(subcategoryRepository.BFindById(subcategoryId)).thenReturn(null);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             subcategoryService.deleteSubcategory(subcategoryId);
         });
@@ -115,17 +134,15 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void deleteSubcategory_whenValid_deletesSubcategory() {
-        // Arrange
+
         String subcategoryId = "12345";
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId(subcategoryId);
         when(subcategoryRepository.BFindById(subcategoryId)).thenReturn(subcategory);
         doNothing().when(subcategoryRepository).BDelete(subcategoryId);
 
-        // Act
         subcategoryService.deleteSubcategory(subcategoryId);
 
-        // Assert
         verify(subcategoryRepository, times(1)).BDelete(subcategoryId);
     }
 
@@ -133,10 +150,9 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void getSubcategory_whenIdIsNull_throwsNotNullException() {
-        // Arrange
+
         String subcategoryId = null;
 
-        // Act & Assert
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             subcategoryService.getSubcategory(subcategoryId);
         });
@@ -146,11 +162,10 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void getSubcategory_whenNotFound_throwsNotFoundException() {
-        // Arrange
+
         String subcategoryId = "12345";
         when(subcategoryRepository.BFindById(subcategoryId)).thenReturn(null);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             subcategoryService.getSubcategory(subcategoryId);
         });
@@ -160,23 +175,21 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void getSubcategory_whenValid_returnsSubcategory() {
-        // Arrange
+
         String subcategoryId = "12345";
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId(subcategoryId);
         when(subcategoryRepository.BFindById(subcategoryId)).thenReturn(subcategory);
 
-        // Act
         Subcategory result = subcategoryService.getSubcategory(subcategoryId);
 
-        // Assert
         assertEquals(subcategoryId, result.getSubcategoryId());
     }
 
     //GETSubCategories
     @Test
     void getSubcategories_whenSubcategoriesExist_returnsListOfSubcategories() {
-        // Arrange
+
         Subcategory subcategory1 = new Subcategory();
         subcategory1.setSubcategoryId("1");
         subcategory1.setDescription("Subcategory 1");
@@ -202,13 +215,11 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void getSubcategories_whenNoSubcategoriesExist_returnsEmptyList() {
-        // Arrange
+
         when(subcategoryRepository.BFindAll()).thenReturn(Collections.emptyList());
 
-        // Act
         List<?> result = subcategoryService.getSubcategories();
 
-        // Assert
         assertTrue(result.isEmpty());
         verify(subcategoryRepository, times(1)).BFindAll();
     }
@@ -216,7 +227,7 @@ class ImpSubcategoryServiceTest {
     //UPDATE
     @Test
     void updateSubcategory_whenSubcategoryExists_updatesSubcategory() {
-        // Arrange
+
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId("1");
         subcategory.setDescription("Updated Description");
@@ -227,30 +238,27 @@ class ImpSubcategoryServiceTest {
 
         when(subcategoryRepository.BFindById("1")).thenReturn(oldSubcategory);
 
-        // Act
+
         subcategoryService.updateSubcategory(subcategory);
 
-        // Assert
         verify(subcategoryRepository, times(1)).BFindById("1");
         verify(subcategoryRepository, times(1)).BUpdate(subcategory);
 
-        // Ensure the description was updated correctly
         assertEquals("Updated Description", subcategory.getDescription());
 
-        // Verify no other interactions with the repository
         verifyNoMoreInteractions(subcategoryRepository);
     }
 
     @Test
     void updateSubcategory_whenSubcategoryDoesNotExist_throwsNotFoundException() {
-        // Arrange
+
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId("1");
         subcategory.setDescription("Updated Description");
 
         when(subcategoryRepository.BFindById("1")).thenReturn(null);
 
-        // Act & Assert
+
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             subcategoryService.updateSubcategory(subcategory);
         });
@@ -272,7 +280,6 @@ class ImpSubcategoryServiceTest {
 
         when(subcategoryRepository.BFindById("1")).thenReturn(oldSubcategory);
 
-        // Act & Assert
         BadObjectException exception = assertThrows(BadObjectException.class, () -> {
             subcategoryService.updateSubcategory(subcategory);
         });
@@ -283,7 +290,7 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void updateSubcategory_whenInvalidValuesProvided_throwsBadValuesException() {
-        // Arrange
+
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId("1");
         subcategory.setDescription("Updated Description");
@@ -295,7 +302,7 @@ class ImpSubcategoryServiceTest {
         when(subcategoryRepository.BFindById("1")).thenReturn(oldSubcategory);
         doThrow(IllegalArgumentException.class).when(subcategoryRepository).BUpdate(subcategory);
 
-        // Act & Assert
+
         BadValuesException exception = assertThrows(BadValuesException.class, () -> {
             subcategoryService.updateSubcategory(subcategory);
         });
@@ -306,7 +313,7 @@ class ImpSubcategoryServiceTest {
     //get books
     @Test
     void getBooks_whenSubcategoryExistsAndHasBooks_returnsListOfBooks() {
-        // Arrange
+
         String idSubcategory = "1";
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId(idSubcategory);
@@ -318,10 +325,9 @@ class ImpSubcategoryServiceTest {
         when(subcategoryRepository.BFindById(idSubcategory)).thenReturn(subcategory);
         when(bookRepository.findBySubcategories(subcategory)).thenReturn(books);
 
-        // Act
+
         List<?> result = subcategoryService.getBooks(idSubcategory);
 
-        // Assert
         assertEquals(2, result.size());
         assertTrue(result.contains(book1));
         assertTrue(result.contains(book2));
@@ -331,12 +337,11 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void getBooks_whenSubcategoryDoesNotExist_throwsNotFoundException() {
-        // Arrange
+
         String idSubcategory = "1";
 
         when(subcategoryRepository.BFindById(idSubcategory)).thenReturn(null);
 
-        // Act & Assert
         assertThrows(NotFoundException.class, () -> subcategoryService.getBooks(idSubcategory));
         verify(subcategoryRepository, times(1)).BFindById(idSubcategory);
         verify(bookRepository, times(0)).findBySubcategories(any(Subcategory.class));
@@ -344,7 +349,7 @@ class ImpSubcategoryServiceTest {
 
     @Test
     void getBooks_whenSubcategoryExistsButHasNoBooks_throwsNotFoundException() {
-        // Arrange
+
         String idSubcategory = "1";
         Subcategory subcategory = new Subcategory();
         subcategory.setSubcategoryId(idSubcategory);
@@ -352,11 +357,30 @@ class ImpSubcategoryServiceTest {
         when(subcategoryRepository.BFindById(idSubcategory)).thenReturn(subcategory);
         when(bookRepository.findBySubcategories(subcategory)).thenReturn(Collections.emptyList());
 
-        // Act & Assert
         assertThrows(NotFoundException.class, () -> subcategoryService.getBooks(idSubcategory));
         verify(subcategoryRepository, times(1)).BFindById(idSubcategory);
         verify(bookRepository, times(1)).findBySubcategories(subcategory);
     }
+
+    @Test
+    void testGetters() {
+
+        assertEquals("1", subcategoryRequest.getSubcategoryId());
+
+        assertEquals(book, subcategoryRequest.getBook());
+        assertEquals("1", subcategoryRequest.getBook().getBookId());
+        assertEquals("Sample Book", subcategoryRequest.getBook().getTitle());
+
+        assertEquals(category, subcategoryRequest.getCategory());
+        assertEquals("1", subcategoryRequest.getCategory().getCategoryId());
+        assertEquals("Fiction", subcategoryRequest.getCategory().getDescription());
+
+
+        assertEquals("Test Description", subcategoryRequest.getDescription());
+
+        assertTrue(subcategoryRequest.isActive());
+    }
+
 
 }
 

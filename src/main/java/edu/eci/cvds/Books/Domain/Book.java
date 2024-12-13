@@ -165,6 +165,7 @@ public class Book {
                 .collect(Collectors.toList());
     }
 
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }

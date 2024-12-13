@@ -51,12 +51,10 @@ class ImpBookServiceTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        MockitoAnnotations.openMocks(this); // Inicializar los mocks
+        MockitoAnnotations.openMocks(this);
 
-        // Crear una instancia del servicio con los mocks
         bookService = new ImpBookService(bookRepository, categoryRepository, subcategoryRepository);
 
-        // Inicialización de objetos de prueba
         bookRequest = new BookRequest();
         bookRequest.setBookId("1");
         bookRequest.setIsbn("123456");
@@ -67,12 +65,12 @@ class ImpBookServiceTest {
         bookRequest.setCollection("Test Collection1 ");
         bookRequest.setRecommendedAges("18+1");
         bookRequest.setLanguage("English1");
-        // Mock para simular que el archivo se sube correctamente
+
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.getBytes()).thenReturn("mockImageContent".getBytes());
         when(mockFile.isEmpty()).thenReturn(false);
 
-        // Asignar el archivo mock al bookRequest
+
         bookRequest.setImg(mockFile);
 
         book = new Book("123456", "Test description", "Test Book", "Test Author", "Test Editorial", "1st Edition",
@@ -80,9 +78,6 @@ class ImpBookServiceTest {
         book.setBookId("1");
         book.setActive(true);
 
-
-
-        // Crear una lista de SearchBook simulada usando Mockito.mock
         SearchBook mockSearchBook1 = mock(SearchBook.class);
         when(mockSearchBook1.getBookId()).thenReturn("12345");
         when(mockSearchBook1.getTitle()).thenReturn("Test Book 1");
@@ -101,10 +96,10 @@ class ImpBookServiceTest {
         when(mockSearchBook2.getImgPath()).thenReturn("images/67890.jpg");
         when(mockSearchBook2.getDescription()).thenReturn("Test description 2");
 
-        // Listar los objetos mockeados
+
         mockBooks = Arrays.asList(mockSearchBook1, mockSearchBook2);
 
-        // Configurar el repositorio para devolver la lista de SearchBook simulada cuando se llame a BFindAll
+
         when(bookRepository.BFindAll()).thenReturn(mockBooks);
         when(bookRepository.BFindById(anyString())).thenReturn(book);
         bookId = "1";
@@ -128,8 +123,6 @@ class ImpBookServiceTest {
     @Test
     void testUpdateBookBookNotFound() {
         when(bookRepository.BFindById(anyString())).thenReturn(null);
-
-        // Verificar que se lanza NotFoundException
         assertThrows(NotFoundException.class, () -> {
             bookService.updateBook(bookRequest);
         });
@@ -139,8 +132,6 @@ class ImpBookServiceTest {
     void testUpdateBookBadRequestExceptionForDifferentISBN() {
         bookRequest.setIsbn("differentIsbn");
         when(bookRepository.BFindById(anyString())).thenReturn(book);
-
-        // Verificar que se lanza BadRequestException
         assertThrows(BadRequestException.class, () -> {
             bookService.updateBook(bookRequest);
         });
@@ -148,17 +139,11 @@ class ImpBookServiceTest {
 
     @Test
     void testDeleteBook() {
-        // Simular comportamiento del repositorio
         when(bookRepository.BFindById("1")).thenReturn(book);
-
-        // Llamar al método a probar
         boolean result = bookService.deleteBook("1");
-
-        // Verificar que el libro fue eliminado
         assertTrue(result);
         verify(bookRepository, times(1)).BDelete("1");
     }
-
 
     @Test
     void testDeleteBook_NullBookId() {
@@ -183,10 +168,8 @@ class ImpBookServiceTest {
 
     @Test
     void testGetBookBookNotActive() {
-        // Configurar el mock para devolver un libro no activo
         book.setActive(false);
         when(bookRepository.BFindById("1")).thenReturn(book);
-
         assertThrows(BadRequestException.class, () -> {
             bookService.getBook("1");
         });
@@ -194,9 +177,7 @@ class ImpBookServiceTest {
 
     @Test
     void testGetBookBookNotFound() {
-        // Configurar el mock para devolver null cuando se busca el libro
         when(bookRepository.BFindById("1")).thenReturn(null);
-
         assertThrows(NotFoundException.class, () -> {
             bookService.getBook("1");
         });
@@ -207,8 +188,6 @@ class ImpBookServiceTest {
         bookRequest.setCategoryIds(List.of("nonExistentCategory"));
         when(bookRepository.BFindById(anyString())).thenReturn(book);
         when(categoryRepository.BFindAllById(anyList())).thenReturn(Collections.emptyList());
-
-        // Verificar que se lanza NotFoundException
         assertThrows(NotFoundException.class, () -> {
             bookService.updateBook(bookRequest);
         });
@@ -219,8 +198,6 @@ class ImpBookServiceTest {
         bookRequest.setSubcategoryIds(List.of("nonExistentSubcategory"));
         when(bookRepository.BFindById(anyString())).thenReturn(book);
         when(subcategoryRepository.BFindAllById(anyList())).thenReturn(Collections.emptyList());
-
-        // Verificar que se lanza NotFoundException
         assertThrows(NotFoundException.class, () -> {
             bookService.updateBook(bookRequest);
         });
@@ -228,19 +205,13 @@ class ImpBookServiceTest {
 
     @Test
     void testDeleteBookNotFound() {
-        // Configurar el mock para devolver null (libro no encontrado)
         when(bookRepository.BFindById("1")).thenReturn(null);
-
-        // Ejecutar la prueba y verificar que se lanza una excepción NotFoundException
         assertThrows(NotFoundException.class, () -> bookService.deleteBook("1"));
     }
 
     @Test
     void testGetBookNotFound() {
-        // Configurar el mock para devolver null (libro no encontrado)
         when(bookRepository.BFindById("1")).thenReturn(null);
-
-        // Ejecutar la prueba y verificar que se lanza una excepción NotFoundException
         assertThrows(NotFoundException.class, () -> bookService.getBook("1"));
     }
 
@@ -258,18 +229,11 @@ class ImpBookServiceTest {
 
     @Test
     void testUploadImg() throws IOException {
-        // Configurar el mock para retornar un libro
         when(bookRepository.BFindById("1")).thenReturn(book);
-
-        // Mock para simular que el archivo se sube correctamente
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.getBytes()).thenReturn("mockImageContent".getBytes());
         when(mockFile.isEmpty()).thenReturn(false);
-
-        // Ejecutar el método a probar
         String imagePath = bookService.uploadImg(mockFile, "1");
-
-        // Verificar el resultado
         assertEquals("images/1.jpg", imagePath);
         verify(bookRepository, times(1)).BSave(any(Book.class));
     }
@@ -293,21 +257,17 @@ class ImpBookServiceTest {
     void testUploadImgBookNotFound() {
         MultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "mockImageContent".getBytes());
         when(bookRepository.BFindById("1")).thenReturn(null);
-
         assertThrows(RuntimeException.class, () -> {
             bookService.uploadImg(mockFile, "1");
         });
     }
     @Test
     void testGetAllBooks() {
-        // Llamar al método a probar
         List<?> books = bookService.getAllBooks();
-        // Verificar que el repositorio ha sido llamado y la lista devuelta es correcta
-        verify(bookRepository, times(1)).BFindAll(); // Verifica que se llama una vez
-        assertEquals(mockBooks.size(), books.size()); // Verifica que la lista devuelta tiene el tamaño esperado
+        verify(bookRepository, times(1)).BFindAll();
+        assertEquals(mockBooks.size(), books.size());
     }
 
-    // Prueba cuando bookId es null o vacío
     @Test
     void testGetCopies_BookIdNull() {
         assertThrows(BadRequestException.class, () -> {
@@ -322,36 +282,30 @@ class ImpBookServiceTest {
         });
     }
 
-    // Prueba cuando no se encuentra el libro
+
     @Test
     void testGetCopies_BookNotFound() {
-        // Simula que el libro no se encuentra
         when(bookRepository.BFindById(anyString())).thenReturn(null);
-
         assertThrows(NotFoundException.class, () -> {
-            bookService.getCopies(bookId);  // Buscando un libro que no existe
+            bookService.getCopies(bookId);
         });
     }
 
 
-    // Prueba cuando el libro es válido y tiene copias
+
     @Test
     void testGetCopies_ValidBookWithCopies() {
-        // Crear un libro activo
+
         Book activeBook = mock(Book.class);
         when(activeBook.isActive()).thenReturn(true);
 
-        // Crear copias para el libro
         Copy copy1 = new Copy(activeBook, "GOOD_CONDITION");
         Copy copy2 = new Copy(activeBook, "DAMAGED");
         List<Copy> copies = Arrays.asList(copy1, copy2);
 
         when(bookRepository.BFindById(anyString())).thenReturn(activeBook);
         when(activeBook.getCopies()).thenReturn(copies);
-
-        // Ejecutar el método y verificar el resultado
         List<Copy> result = bookService.getCopies(bookId);
-
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.contains(copy1));
@@ -361,7 +315,7 @@ class ImpBookServiceTest {
 
     @Test
     void saveBooks_success() throws Exception {
-        // Crear un libro de prueba en formato Excel
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         Row headerRow = sheet.createRow(0);

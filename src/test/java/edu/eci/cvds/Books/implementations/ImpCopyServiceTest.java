@@ -53,7 +53,7 @@ class ImpCopyServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         copyService = new ImpCopyService(copyRepository, bookRepository, codeGenerator);
-        // Inicializando CopyRequest
+
         copyRequest = new CopyRequest();
         copyRequest.setId("1");
         copyRequest.setIsbn("1234567890");
@@ -61,7 +61,6 @@ class ImpCopyServiceTest {
         copyRequest.setDisponibility(CopyDispo.AVAILABLE);
         copyRequest.setUbication("shelf1");
 
-        // Inicializando Copy
         existingCopy = new Copy();
         existingCopy.setId("1");
         existingCopy.setState("Fair");
@@ -70,7 +69,7 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopy_whenValidCopy_createsAndReturnsId() throws Exception {
-        // Arrange
+
         Copy copy = new Copy();
         copy.setId("1");
         copy.setState("GOOD_CONDITION");
@@ -82,10 +81,8 @@ class ImpCopyServiceTest {
         when(codeGenerator.generateCode("1")).thenReturn("barcode123");
         doNothing().when(copyRepository).BSave(any(Copy.class));
 
-        // Act
         String barCode = copyService.createCopy("book1", copy);
 
-        // Assert
         assertEquals("barcode123", barCode);
         assertEquals("1", copy.getId());
         verify(copyRepository, times(2)).BSave(any(Copy.class));
@@ -93,7 +90,6 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopy_whenNullCopy_throwsNotNullException() {
-        // Act & Assert
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             copyService.createCopy("book1", null);
         });
@@ -102,11 +98,8 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopy_whenNullState_throwsBadStateException() {
-        // Arrange
         Copy copy = new Copy();
         copy.setId("1");
-
-        // Act & Assert
         BadStateException exception = assertThrows(BadStateException.class, () -> {
             copyService.createCopy("book1", copy);
         });
@@ -115,14 +108,10 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopy_whenBookNotFound_throwsNotFoundException() {
-        // Arrange
         Copy copy = new Copy();
         copy.setId("1");
         copy.setState("GOOD_CONDITION");
-
         when(bookRepository.BFindById("book1")).thenReturn(null);
-
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             copyService.createCopy("book1", copy);
         });
@@ -131,18 +120,13 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopy_whenGenerateCodeFails_throwsBadObjectException() throws Exception {
-        // Arrange
         Copy copy = new Copy();
         copy.setId("1");
         copy.setState("GOOD_CONDITION");
-
         Book book = new Book();
         book.setBookId("book1");
-
         when(bookRepository.BFindById("book1")).thenReturn(book);
         when(codeGenerator.generateCode("1")).thenThrow(new GenerateCodeException("Error generating code"));
-
-        // Act & Assert
         BadObjectException exception = assertThrows(BadObjectException.class, () -> {
             copyService.createCopy("book1", copy);
         });
@@ -150,7 +134,6 @@ class ImpCopyServiceTest {
     }
     @Test
     void createCopy_whenIllegalArgumentExceptionThrown_throwsBadStateException() {
-        // Arrange
         Copy copy = new Copy();
         copy.setId("1");
         copy.setState("GOOD_CONDITION");
@@ -161,7 +144,6 @@ class ImpCopyServiceTest {
         when(bookRepository.BFindById("book1")).thenReturn(book);
         doThrow(new IllegalArgumentException("Invalid argument")).when(copyRepository).BSave(any(Copy.class));
 
-        // Act & Assert
         BadStateException exception = assertThrows(BadStateException.class, () -> {
             copyService.createCopy("book1", copy);
         });
@@ -171,42 +153,34 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopyByIsbn_whenIsbnIsNull_throwsNotNullException() {
-        // Arrange
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn(null);
         copyRequest.setState("Good");
-
-        // Act & Assert
         assertThrows(NotNullException.class, () -> copyService.createCopyByIsbn(copyRequest));
     }
 
     @Test
     void createCopyByIsbn_whenStateIsNull_throwsBadStateException() {
-        // Arrange
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn("12345");
         copyRequest.setState(null);
-
-        // Act & Assert
         assertThrows(BadStateException.class, () -> copyService.createCopyByIsbn(copyRequest));
     }
 
     @Test
     void createCopyByIsbn_whenBookNotFound_throwsNotFoundException() {
-        // Arrange
+
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn("12345");
         copyRequest.setState("Good");
 
         when(bookRepository.findByIsbn("12345")).thenReturn(null);
-
-        // Act & Assert
         assertThrows(NotFoundException.class, () -> copyService.createCopyByIsbn(copyRequest));
     }
 
     @Test
     void createCopyByIsbn_whenCopyIsCreated_returnsCopyId() throws GenerateCodeException {
-        // Arrange
+
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn("12345");
         copyRequest.setState("Good");
@@ -220,24 +194,21 @@ class ImpCopyServiceTest {
         when(bookRepository.findByIsbn("12345")).thenReturn(book);
         doAnswer(invocation -> {
             Copy argCopy = invocation.getArgument(0);
-            argCopy.setId("1");  // Simular la generación del ID en la base de datos
+            argCopy.setId("1");
             return null;
         }).when(copyRepository).BSave(any(Copy.class));
         when(codeGenerator.generateCode("1")).thenReturn("ABC123");
 
-        // Act
+
         String copyId = copyService.createCopyByIsbn(copyRequest);
 
-        // Assert
         assertEquals("1", copyId);
 
-        // Verificar que el método BSave se llamó dos veces
         verify(copyRepository, times(2)).BSave(any(Copy.class));
 
-        // Verificar el código de barras en el objeto actualizado
         ArgumentCaptor<Copy> copyCaptor = ArgumentCaptor.forClass(Copy.class);
         verify(copyRepository, times(2)).BSave(copyCaptor.capture());
-        Copy savedCopy = copyCaptor.getAllValues().get(1);  // Obtener el valor guardado en la segunda llamada
+        Copy savedCopy = copyCaptor.getAllValues().get(1);
         assertEquals("ABC123", savedCopy.getBarCode());
     }
 
@@ -245,7 +216,7 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopyByIsbn_whenIllegalArgumentExceptionThrown_throwsBadStateException() {
-        // Arrange
+
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn("12345");
         copyRequest.setState("Good");
@@ -256,13 +227,12 @@ class ImpCopyServiceTest {
         when(bookRepository.findByIsbn("12345")).thenReturn(book);
         doThrow(IllegalArgumentException.class).when(copyRepository).BSave(any(Copy.class));
 
-        // Act & Assert
         assertThrows(BadStateException.class, () -> copyService.createCopyByIsbn(copyRequest));
     }
 
     @Test
     void createCopyByIsbn_whenTransientObjectExceptionThrown_throwsBadObjectException() {
-        // Arrange
+
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn("12345");
         copyRequest.setState("Good");
@@ -274,7 +244,7 @@ class ImpCopyServiceTest {
         when(bookRepository.findByIsbn("12345")).thenReturn(book);
         doThrow(new TransientObjectException("error")).when(copyRepository).BSave(any(Copy.class));
 
-        // Act & Assert
+
         BadObjectException exception = assertThrows(BadObjectException.class, () -> {
             copyService.createCopyByIsbn(copyRequest);
         });
@@ -284,7 +254,7 @@ class ImpCopyServiceTest {
 
     @Test
     void createCopyByIsbn_whenGenerateCodeExceptionThrown_throwsBadObjectException() throws GenerateCodeException {
-        // Arrange
+
         CopyRequest copyRequest = new CopyRequest();
         copyRequest.setIsbn("12345");
         copyRequest.setState("Good");
@@ -299,7 +269,7 @@ class ImpCopyServiceTest {
         when(bookRepository.findByIsbn("12345")).thenReturn(book);
         doAnswer(invocation -> {
             Copy argCopy = invocation.getArgument(0);
-            argCopy.setId("1");  // Simular la generación del ID en la base de datos
+            argCopy.setId("1");
             return null;
         }).when(copyRepository).BSave(any(Copy.class));
         doThrow(new GenerateCodeException(GenerateCodeException.CODE_GENERATION_FAILED)).when(codeGenerator).generateCode("1");
@@ -316,7 +286,7 @@ class ImpCopyServiceTest {
 
     @Test
     void deleteCopy_whenIdCopyIsNull_throwsNotNullException() {
-        // Act & Assert
+
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             copyService.deleteCopy(null);
         });
@@ -326,36 +296,32 @@ class ImpCopyServiceTest {
 
     @Test
     void deleteCopy_whenCopyNotFound_throwsNotFoundException() {
-        // Arrange
+
         String idCopy = "12345";
         when(copyRepository.BFindById(idCopy)).thenReturn(null);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             copyService.deleteCopy(idCopy);
         });
-
         assertEquals("Copy with ID: 12345 was not found.", exception.getMessage());
     }
 
     @Test
     void deleteCopy_whenCopyExists_deletesCopyAndReturnsTrue() {
-        // Arrange
+
         String idCopy = "12345";
         Copy copy = new Copy();
         when(copyRepository.BFindById(idCopy)).thenReturn(copy);
 
-        // Act
         boolean result = copyService.deleteCopy(idCopy);
 
-        // Assert
         assertTrue(result);
         verify(copyRepository, times(1)).BDelete(idCopy);
     }
     //getCopyById
     @Test
     void getCopyById_whenIdIsNull_throwsNotNullException() {
-        // Act & Assert
+
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             copyService.getCopyById(null);
         });
@@ -400,30 +366,25 @@ class ImpCopyServiceTest {
 
         when(copyRepository.BFindById(validId)).thenReturn(expectedCopy);
 
-        // Act
         Copy actualCopy = copyService.getCopyById(validId);
 
-        // Assert
         assertEquals(expectedCopy, actualCopy);
     }
 
     //findAllCopies
     @Test
     void findAllCopies_whenNoCopiesExist_returnsEmptyList() {
-        // Arrange
         when(copyRepository.BFindAll()).thenReturn(Arrays.asList());
 
-        // Act
         List<?> result = copyService.findAllCopies();
 
-        // Assert
         assertTrue(result.isEmpty());
         verify(copyRepository, times(1)).BFindAll();
     }
 
     @Test
     void findAllCopies_whenCopiesExist_returnsListOfCopies() {
-        // Arrange
+
         Copy copy1 = new Copy();
         copy1.setId("1");
         Copy copy2 = new Copy();
@@ -432,10 +393,8 @@ class ImpCopyServiceTest {
 
         when(copyRepository.BFindAll()).thenReturn(copies);
 
-        // Act
         List<?> result = copyService.findAllCopies();
 
-        // Assert
         assertEquals(2, result.size());
         assertTrue(result.contains(copy1));
         assertTrue(result.contains(copy2));
@@ -445,10 +404,9 @@ class ImpCopyServiceTest {
 
     @Test
     void updateCopies_whenCopyNotFound_throwsNotFoundException() {
-        // Arrange
+
         when(copyRepository.BFindById("1")).thenReturn(null);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             copyService.updateCopies(copyRequest);
         });
@@ -458,12 +416,11 @@ class ImpCopyServiceTest {
 
     @Test
     void updateCopies_whenInvalidDisponibility_throwsBadAvailabilityException() {
-        // Arrange
-        copyRequest.setDisponibility(null);  // Invalid value
+
+        copyRequest.setDisponibility(null);
 
         when(copyRepository.BFindById("1")).thenReturn(existingCopy);
 
-        // Act & Assert
         BadAvailabilityException exception = assertThrows(BadAvailabilityException.class, () -> {
             copyService.updateCopies(copyRequest);
         });
@@ -473,36 +430,18 @@ class ImpCopyServiceTest {
 
     @Test
     void updateCopies_whenValidRequest_updatesCopyAndReturnsTrue() {
-        // Arrange
+
         copyRequest.setDisponibility(CopyDispo.BORROWED);
         copyRequest.setState("Good");
         when(copyRepository.BFindById("1")).thenReturn(existingCopy);
 
-        // Act
         boolean result = copyService.updateCopies(copyRequest);
 
-        // Assert
         assertTrue(result);
         assertEquals(CopyDispo.BORROWED, existingCopy.getDisponibility());
         assertEquals("Good", existingCopy.getState());
         verify(copyRepository, times(1)).BUpdate(existingCopy);
     }
-
-//    @Test
-//    void updateCopies_whenInvalidState_throwsBadStateException() {
-//        // Arrange
-//        copyRequest.setState("INVALID_STATE"); // Invalid state
-//
-//        when(copyRepository.BFindById("1")).thenReturn(existingCopy);
-//
-//        // Act & Assert
-//        BadStateException exception = assertThrows(BadStateException.class, () -> {
-//            copyService.updateCopies(copyRequest);
-//        });
-//
-//        assertEquals("Invalid state for Copy ID: 1", exception.getMessage());
-//    }
-
 
     @Test
     void updateCopies_whenIllegalArgumentException_throwsBadValuesException() {
@@ -512,7 +451,6 @@ class ImpCopyServiceTest {
         when(copyRepository.BFindById("1")).thenReturn(existingCopy);
         doThrow(new IllegalArgumentException()).when(copyRepository).BUpdate(any(Copy.class));
 
-        // Act & Assert
         BadValuesException exception = assertThrows(BadValuesException.class, () -> {
             copyService.updateCopies(copyRequest);
         });
@@ -524,23 +462,19 @@ class ImpCopyServiceTest {
 
     @Test
     void findCopiesByBook_whenBookIsNull_throwsNotNullException() {
-        // Act & Assert
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             copyService.findCopiesByBook(null);
         });
-
         assertEquals("Copy must not be null", exception.getMessage());
     }
 
     @Test
     void findCopiesByBook_whenCopiesNotFound_throwsNotFoundException() {
-        // Arrange
+
         Book book = new Book();
         book.setBookId("1");
-
         when(copyRepository.findCopyByBook(book)).thenReturn(null);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             copyService.findCopiesByBook(book);
         });
@@ -550,23 +484,21 @@ class ImpCopyServiceTest {
 
     @Test
     void findCopiesByBook_whenCopiesFound_returnsCopies() {
-        // Arrange
+
         Book book = new Book();
         book.setBookId("1");
         List<Copy> expectedCopies = List.of(new Copy(), new Copy());
 
         when(copyRepository.findCopyByBook(book)).thenReturn(expectedCopies);
 
-        // Act
         List<Copy> actualCopies = copyService.findCopiesByBook(book);
 
-        // Assert
         assertEquals(expectedCopies, actualCopies);
     }
 
     @Test
     void findCopyByBarcode_whenBarcodeIsNull_throwsNotNullException() {
-        // Act & Assert
+
         NotNullException exception = assertThrows(NotNullException.class, () -> {
             copyService.findCopyByBarcode(null);
         });
@@ -576,12 +508,11 @@ class ImpCopyServiceTest {
 
     @Test
     void findCopyByBarcode_whenCopyNotFound_throwsNotFoundException() {
-        // Arrange
+
         String barcode = "12345";
 
         when(copyRepository.findCopyByBarCode(barcode)).thenReturn(null);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             copyService.findCopyByBarcode(barcode);
         });
@@ -591,16 +522,16 @@ class ImpCopyServiceTest {
 
     @Test
     void findCopyByBarcode_whenCopyFound_returnsCopy() {
-        // Arrange
+
         String barcode = "12345";
         Copy expectedCopy = new Copy();
 
         when(copyRepository.findCopyByBarCode(barcode)).thenReturn(expectedCopy);
 
-        // Act
+
         Copy actualCopy = copyService.findCopyByBarcode(barcode);
 
-        // Assert
+
         assertEquals(expectedCopy, actualCopy);
     }
 
@@ -697,4 +628,29 @@ class ImpCopyServiceTest {
         assertEquals("Error al leer el archivo Excel", exception.getMessage(), "The exception message should match the expected");
     }
 
+    @Test
+    void copyRequest_settersAndGetters_shouldWorkCorrectly() {
+        // Crear una instancia de CopyRequest
+        CopyRequest copyRequest = new CopyRequest();
+
+        // Establecer valores para los atributos
+        String expectedBarCode = "1234567890123";
+        Book expectedBook = new Book();
+        expectedBook.setIsbn("1234567890");
+        expectedBook.setTitle("Test Book");
+        boolean expectedActive = true;
+        String expectedBookId = "9876543210";
+
+        // Usar los setters para asignar los valores
+        copyRequest.setBarCode(expectedBarCode);
+        copyRequest.setBook(expectedBook);
+        copyRequest.setActive(expectedActive);
+        copyRequest.setBookId(expectedBookId);
+
+        // Verificar que los getters devuelvan los valores correctos
+        assertEquals(expectedBarCode, copyRequest.getBarCode(), "The barCode should be correct");
+        assertEquals(expectedBook, copyRequest.getBook(), "The book should be correct");
+        assertEquals(expectedActive, copyRequest.isActive(), "The active status should be correct");
+        assertEquals(expectedBookId, copyRequest.getBookId(), "The bookId should be correct");
+    }
 }
