@@ -6,8 +6,9 @@ public class NotFoundException extends RuntimeException {
         super(message);
     }
     public NotFoundException(String object, String id) {
-        super( object + " with ID " + id + " was not found.");
+        super( object + " with ID: " + id + " was not found.");
     }
+
 
 
 }

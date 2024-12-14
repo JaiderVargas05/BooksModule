@@ -5,6 +5,6 @@ public class BadFormatException extends RuntimeException{
         super(message);
     }
     public BadFormatException(String object, String id) {
-        super( object + " with  " + id + " format is incorrect.");
+        super( object + " ID has a bad format: " + id);
     }
 }

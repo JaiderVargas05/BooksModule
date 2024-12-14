@@ -1,12 +1,11 @@
 package edu.eci.cvds.Books.Repository;
 
-import edu.eci.cvds.Books.Domain.Book;
-import edu.eci.cvds.Books.Domain.Category;
 import edu.eci.cvds.Books.Domain.Subcategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
+
 @Repository("SubRepo")
 public interface SubcategoryRepository extends BRepository,JpaRepository<Subcategory,String>{
     @Override
@@ -27,6 +26,7 @@ public interface SubcategoryRepository extends BRepository,JpaRepository<Subcate
     }
 
     @Override
+    @Query("SELECT s FROM subcategory s  WHERE s.active=true")
     public default List<?> BFindAll(){
         return findAll();
     }

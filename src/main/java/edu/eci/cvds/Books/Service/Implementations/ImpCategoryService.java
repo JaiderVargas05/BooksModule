@@ -54,7 +54,7 @@ public class ImpCategoryService implements CategoryService {
     @Override
     public Category getCategory(String categoryId) {
         if (categoryId == null){
-            throw new NotNullException("Catgory ID", "null");
+            throw new NotNullException("Category ID", "null");
         }
         Category category = (Category)categoryRepository.BFindById(categoryId);
         if (category == null){
@@ -81,15 +81,15 @@ public class ImpCategoryService implements CategoryService {
             }
             (categoryRepository).BUpdate(category);
         } catch (IllegalArgumentException ex){
-            throw new BadValuesException("Invalid values for Category with ID", category.getCategoryId());
+            throw new BadValuesException("Category", category.getCategoryId());
         }
     }
     @Override
     public List<?> getBooks(String idCategory){
         Category category = (Category) this.categoryRepository.BFindById(idCategory);
-        if(category==null) throw new NotFoundException(idCategory);
+        if(category==null) throw new NotFoundException("Category",idCategory);
         List<BasicBook> books = ((BookRepository)this.bookRepository).findByCategories(category);
-        if(books.isEmpty()) throw new NotFoundException("Books");
+        if(books.isEmpty()) throw new NotFoundException("Books not found.");
         return books;
     }
 }

@@ -1,7 +1,6 @@
 package edu.eci.cvds.Books.Domain;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -166,6 +165,7 @@ public class Book {
                 .collect(Collectors.toList());
     }
 
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
@@ -192,5 +192,12 @@ public class Book {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public void setNewCategories(List<Category> newCategories){
+        categories.addAll(newCategories);
+    }
+    public void setNewSubcategories(List<Subcategory> newSubcategories){
+        subcategories.addAll(newSubcategories);
     }
 }
