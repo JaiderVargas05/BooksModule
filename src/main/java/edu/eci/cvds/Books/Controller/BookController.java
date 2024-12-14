@@ -76,6 +76,8 @@ public class BookController {
             return new BookResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
         } catch (InternalServerErrorException e){
             return new BookResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),Collections.emptyList());
+        }catch (BadObjectException e){
+            return new BookResponse(HttpStatus.BAD_REQUEST,e.getMessage(),Collections.emptyList());
         }
     }
 
