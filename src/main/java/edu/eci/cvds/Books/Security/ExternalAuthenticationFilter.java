@@ -34,7 +34,13 @@ public class ExternalAuthenticationFilter  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
 
+        String path = request.getRequestURI();
 
+        // Excluir rutas estáticas del filtro
+        if (path.startsWith("/images/") || path.startsWith("/static/images/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authHeader = request.getHeader("Authorization");
 
         // Si el encabezado "Authorization" está ausente o no tiene el formato esperado, se retorna un error

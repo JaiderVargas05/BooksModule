@@ -19,8 +19,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // Permitir acceso sin autenticación a los recursos estáticos (imágenes)
+                        .requestMatchers("/images/**").permitAll()
+                        // Todas las demás solicitudes deben estar autenticadas
                         .anyRequest().authenticated())
-                .addFilterBefore(externalApiAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(externalApiAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
