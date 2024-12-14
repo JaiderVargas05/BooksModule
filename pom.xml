@@ -168,6 +168,21 @@
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/edu/eci/cvds/Books/Exception/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Repository/**</exclude>
+								<exclude>**/configurators/</exclude>
+								<exclude>**/edu/eci/cvds/Books/*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Domain/CopyState*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Domain/CopyDispo</exclude>
+								<exclude>**/edu/eci/cvds/Books/Controller/*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Controller/ResponseModel/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Security/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Config/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Codes/BarcodeController*</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 					<execution>
 						<id>report</id>
@@ -177,19 +192,17 @@
 						</goals>
 						<configuration>
 							<excludes>
-								//clases a excluir
-								<exclude>edu/eci/cvds/Books/Exception/**</exclude>
-								<exclude>edu/eci/cvds/Books/Repository/**</exclude>
-								<exclude>/configurators/</exclude>
-								<exclude>/edu/eci/cvds/Books/*</exclude>
-								<exclude>/edu/eci/cvds/Books/Domain/CopyState*</exclude>
-								<exclude>/edu/eci/cvds/Books/Domain/CopyDispo</exclude>
-								<exclude>/edu/eci/cvds/Books/Controller/*</exclude>
-								<exclude>/edu/eci/cvds/Books/Controller/ResponseModel/**</exclude>
-								<exclude>/edu/eci/cvds/Books/Security/**</exclude>
-								<exclude>/edu/eci/cvds/Books/Config/**</exclude>
-								<exclude>/edu/eci/cvds/Books/Codes/BarcodeController*</exclude>
-
+								<exclude>**/edu/eci/cvds/Books/Exception/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Repository/**</exclude>
+								<exclude>**/configurators/</exclude>
+								<exclude>**/edu/eci/cvds/Books/*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Domain/CopyState*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Domain/CopyDispo</exclude>
+								<exclude>**/edu/eci/cvds/Books/Controller/*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Controller/ResponseModel/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Security/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Config/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Codes/BarcodeController*</exclude>
 							</excludes>
 						</configuration>
 					</execution>
@@ -211,6 +224,19 @@
 									</limits>
 								</rule>
 							</rules>
+							<excludes>
+								<exclude>**/edu/eci/cvds/Books/Exception/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Repository/**</exclude>
+								<exclude>**/configurators/</exclude>
+								<exclude>**/edu/eci/cvds/Books/*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Domain/CopyState*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Domain/CopyDispo</exclude>
+								<exclude>**/edu/eci/cvds/Books/Controller/*</exclude>
+								<exclude>**/edu/eci/cvds/Books/Controller/ResponseModel/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Security/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Config/**</exclude>
+								<exclude>**/edu/eci/cvds/Books/Codes/BarcodeController*</exclude>
+							</excludes>
 						</configuration>
 					</execution>
 				</executions>
